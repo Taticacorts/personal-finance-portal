@@ -3773,7 +3773,7 @@ const NominaModule = (() => {
       // Concepto
       const tdConc = document.createElement('td'); tdConc.textContent = row[0] || ''; tdConc.style.padding = '4px 8px'; tdConc.style.fontWeight = '500'; tr.appendChild(tdConc);
       // Costo (use row[2] which is the costo from mapRow, or row[1] for months without mapRow)
-      const costoVal = Number(row[2]) || Number(row[1]) || 0;
+      const costoVal = Number(row[1]) || Number(row[2]) || 0;
       const tdCost = document.createElement('td'); tdCost.textContent = costoVal ? maskValue(formatCOP(costoVal)) : ''; tdCost.style.padding = '4px 8px'; tdCost.style.fontWeight = '600'; tdCost.style.color = 'var(--color-primary)'; tr.appendChild(tdCost);
       // Actions
       const actionsCell = document.createElement('td'); actionsCell.className = 'actions-cell'; actionsCell.style.padding = '4px';
