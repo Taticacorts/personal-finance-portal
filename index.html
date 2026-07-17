@@ -3672,13 +3672,13 @@ const NominaModule = (() => {
         await CacheModule.saveSheetData(sheetName, sheetData);
       }
 
-      monthData = (sheetData.values || []).map(r => SHEET_CONFIG['nomina'].mapRow(r, monthIndex)).filter(function(r){ return (r[0]||'').toString().trim() !== '' || Number(r[1]) || Number(r[2]); });
+      monthData = (sheetData.values || []).map(r => SHEET_CONFIG['nomina'].mapRow(r, monthIndex)).filter(function(r){ return r !== null && ((r[0]||'').toString().trim() !== '' || Number(r[1]) || Number(r[2])); });
       renderMonthDetail(monthIndex);
     } catch (err) {
       const sheetName = SHEET_CONFIG['nomina'].getSheetName(monthIndex); if (!sheetName) { monthData = []; renderMonthDetail(monthIndex); return; }
       const cached = await CacheModule.getSheetData(sheetName);
       if (cached) {
-        monthData = (cached.values || []).map(r => SHEET_CONFIG['nomina'].mapRow(r, monthIndex)).filter(function(r){ return (r[0]||'').toString().trim() !== '' || Number(r[1]) || Number(r[2]); });
+        monthData = (cached.values || []).map(r => SHEET_CONFIG['nomina'].mapRow(r, monthIndex)).filter(function(r){ return r !== null && ((r[0]||'').toString().trim() !== '' || Number(r[1]) || Number(r[2])); });
         renderMonthDetail(monthIndex);
         Components.showToast('Mostrando datos en cache', 'warning');
       } else {
