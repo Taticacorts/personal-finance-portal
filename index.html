@@ -3754,72 +3754,36 @@ const NominaModule = (() => {
 
   function renderNominaTable(tableContainer) {
     tableContainer.innerHTML = '';
-
-    const headers = ['CONCEPTO', 'COSTO', 'ACCIONES'];
-
     const container = document.createElement('div');
     container.className = 'table-container';
-
     const table = document.createElement('table');
     table.className = 'data-table';
+    table.style.fontSize = '0.75rem';
 
     const thead = document.createElement('thead');
     const headerRow = document.createElement('tr');
-    headers.forEach(h => {
-      const th = document.createElement('th');
-      th.textContent = h;
-      headerRow.appendChild(th);
+    ['CONCEPTO', 'COSTO', ''].forEach(h => {
+      const th = document.createElement('th'); th.textContent = h; th.style.padding = '6px 8px'; th.style.fontSize = '0.65rem'; headerRow.appendChild(th);
     });
-    thead.appendChild(headerRow);
-    table.appendChild(thead);
+    thead.appendChild(headerRow); table.appendChild(thead);
 
     const tbody = document.createElement('tbody');
     monthData.forEach((row, rowIdx) => {
       const tr = document.createElement('tr');
-      tr.dataset.rowIndex = rowIdx;
-
-      // Data cells: concepto, sueldoReal, costo, disponible
-      for (let i = 0; i < 4; i++) {
-        const td = document.createElement('td');
-        if (i === 0) {
-          td.textContent = row[i] || '';
-        } else {
-          td.textContent = maskValue(formatCOP(Number(row[i]) || 0));
-        }
-        tr.appendChild(td);
-      }
-
-      // Actions cell
-      const actionsCell = document.createElement('td');
-      actionsCell.className = 'actions-cell';
-
-      const checkBtn = document.createElement('button');
-      checkBtn.className = 'btn-icon';
-      checkBtn.textContent = '\u2713';
-      checkBtn.title = 'Confirmar';
-      actionsCell.appendChild(checkBtn);
-
-      const editBtn = document.createElement('button');
-      editBtn.className = 'btn-icon btn-icon-edit';
-      editBtn.textContent = '\u270F\uFE0F';
-      editBtn.title = 'Editar';
-      editBtn.addEventListener('click', () => handleEdit(rowIdx));
-      actionsCell.appendChild(editBtn);
-
-      const delBtn = document.createElement('button');
-      delBtn.className = 'btn-icon btn-icon-danger';
-      delBtn.textContent = '\uD83D\uDDD1\uFE0F';
-      delBtn.title = 'Eliminar';
-      delBtn.addEventListener('click', () => handleDelete(rowIdx));
-      actionsCell.appendChild(delBtn);
-
+      // Concepto
+      const tdConc = document.createElement('td'); tdConc.textContent = row[0] || ''; tdConc.style.padding = '4px 8px'; tdConc.style.fontWeight = '500'; tr.appendChild(tdConc);
+      // Costo (use row[2] which is the costo from mapRow, or row[1] for months without mapRow)
+      const costoVal = Number(row[2]) || Number(row[1]) || 0;
+      const tdCost = document.createElement('td'); tdCost.textContent = costoVal ? maskValue(formatCOP(costoVal)) : ''; tdCost.style.padding = '4px 8px'; tdCost.style.fontWeight = '600'; tdCost.style.color = 'var(--color-primary)'; tr.appendChild(tdCost);
+      // Actions
+      const actionsCell = document.createElement('td'); actionsCell.className = 'actions-cell'; actionsCell.style.padding = '4px';
+      const editBtn = document.createElement('button'); editBtn.className = 'btn-icon btn-icon-edit'; editBtn.style.width = '24px'; editBtn.style.height = '24px'; editBtn.style.fontSize = '0.7rem'; editBtn.textContent = String.fromCodePoint(0x270F, 0xFE0F); editBtn.addEventListener('click', () => handleEdit(rowIdx)); actionsCell.appendChild(editBtn);
+      const delBtn = document.createElement('button'); delBtn.className = 'btn-icon btn-icon-danger'; delBtn.style.width = '24px'; delBtn.style.height = '24px'; delBtn.style.fontSize = '0.7rem'; delBtn.textContent = String.fromCodePoint(0x1F5D1, 0xFE0F); delBtn.addEventListener('click', () => handleDelete(rowIdx)); actionsCell.appendChild(delBtn);
       tr.appendChild(actionsCell);
       tbody.appendChild(tr);
     });
 
-    table.appendChild(tbody);
-    container.appendChild(table);
-    tableContainer.appendChild(container);
+    table.appendChild(tbody); container.appendChild(table); tableContainer.appendChild(container);
   }
 
   async function handleAdd(formData) {
