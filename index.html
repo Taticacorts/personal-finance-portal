@@ -3716,7 +3716,7 @@ const NominaModule = (() => {
     const badgeContainer = document.createElement('div');
     badgeContainer.className = 'badge-container';
     badgeContainer.appendChild(Components.createBadge('SUELDO REAL', maskValue(formatCOP(sueldoReal)), '\uD83D\uDCB5'));
-    badgeContainer.appendChild(Components.createBadge('SUELDO', maskValue(formatCOP(sueldoReal)), '\uD83D\uDCB3'));
+    badgeContainer.appendChild(Components.createBadge('SUELDO', maskValue(formatCOP(SUELDO_FIJO)), '\uD83D\uDCB3'));
     const dispBadge = Components.createBadge('DISPONIBLE', maskValue(formatCOP(disponible)), '\u2705');
     dispBadge.id = 'badge-disponible';
     badgeContainer.appendChild(dispBadge);
