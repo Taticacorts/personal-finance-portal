@@ -1163,6 +1163,9 @@ textarea.form-control {
 
 
 
+
+/* Remove unnecessary scroll on compact tables */
+.module-layout .table-container { overflow-x: visible; }
     </style>
 </head>
 <body>
@@ -1260,9 +1263,9 @@ const ROUTES = {
 };
 
 // Global value visibility state
-let _valuesVisible = true;
+let _valuesVisible = false;
 function isValuesVisible() { return _valuesVisible; }
-function maskValue(val) { return val; }
+function maskValue(val) { return _valuesVisible ? val : '....'; }
 // After render, mark all monetary cells with real value
 function markMonetaryCells() {
   document.querySelectorAll('.data-table td').forEach(td => {
