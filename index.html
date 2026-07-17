@@ -1,0 +1,4236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Finanzas Personales</title>
+    <meta name="theme-color" content="#1B5E20">
+    <style>
+/* ==========================================================================
+   Sistema de Diseno CSS - Portal de Finanzas Personales
+   Custom properties, layout responsivo con Grid/Flexbox y media queries
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. CUSTOM PROPERTIES (Design Tokens)
+   -------------------------------------------------------------------------- */
+:root {
+  /* Color Palette */
+  --color-primary: #1B5E20;
+  --color-primary-light: #E8F5E9;
+  --color-primary-dark: #0D3B13;
+  --color-accent: #4CAF50;
+  --color-accent-hover: #388E3C;
+  --color-bg: #f5f5f5;
+  --color-text: #333;
+  --color-text-light: #666;
+  --color-white: #fff;
+  --color-border: #e0e0e0;
+  --color-danger: #e53935;
+  --color-danger-hover: #c62828;
+  --color-warning: #FF9800;
+  --color-info: #2196F3;
+  --color-success: #4CAF50;
+
+  /* Typography */
+  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 2rem;
+
+  /* Spacing Scale */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 3rem;
+
+  /* Border Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.12);
+
+  /* Layout */
+  --sidebar-width: 220px;
+  --header-height: 60px;
+
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s ease;
+  --transition-slow: 0.35s ease;
+}
+
+/* --------------------------------------------------------------------------
+   2. RESET & BASE STYLES
+   -------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+input, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/* --------------------------------------------------------------------------
+   3. MAIN LAYOUT (CSS Grid: Sidebar + Content)
+   -------------------------------------------------------------------------- */
+.app-layout {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) 1fr;
+  min-height: 100vh;
+}
+
+.main-content {
+  padding: var(--spacing-xl);
+  overflow-y: auto;
+  min-height: 100vh;
+  background-color: var(--color-bg);
+}
+
+/* --------------------------------------------------------------------------
+   4. SIDEBAR STYLES
+   -------------------------------------------------------------------------- */
+.sidebar {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  width: var(--sidebar-width);
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  transition: transform var(--transition-normal);
+}
+
+.sidebar-header {
+  padding: var(--spacing-lg);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-title {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--color-white);
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: var(--spacing-md) 0;
+  overflow-y: auto;
+}
+
+.sidebar-nav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  color: rgba(255, 255, 255, 0.8);
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+}
+
+.sidebar-nav-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--color-white);
+}
+
+.sidebar-nav-item.active {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.sidebar-nav-item .nav-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.sidebar-footer {
+  padding: var(--spacing-lg);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-user {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
+}
+
+.sidebar-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+}
+
+.sidebar-username {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+}
+
+.sidebar-role {
+  font-size: var(--font-size-xs);
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Hamburger Menu Button */
+.hamburger-btn {
+  display: none;
+  position: fixed;
+  top: var(--spacing-md);
+  left: var(--spacing-md);
+  z-index: 1100;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-xl);
+}
+
+/* Sidebar overlay for mobile */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+.sidebar-overlay.active {
+  display: block;
+}
+
+/* --------------------------------------------------------------------------
+   5. CARD STYLES
+   -------------------------------------------------------------------------- */
+.card {
+  background-color: var(--color-white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: var(--spacing-lg);
+  transition: box-shadow var(--transition-normal), transform var(--transition-normal);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+.card-clickable:hover {
+  transform: translateY(-2px);
+  cursor: pointer;
+}
+
+.card-title {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  margin-bottom: var(--spacing-sm);
+  color: var(--color-text);
+}
+
+.card-subtitle {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+}
+
+.card-link {
+  display: inline-block;
+  margin-top: var(--spacing-md);
+  color: var(--color-accent);
+  font-weight: 500;
+  font-size: var(--font-size-sm);
+}
+
+/* Dashboard cards grid */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+/* --------------------------------------------------------------------------
+   6. TABLE STYLES
+   -------------------------------------------------------------------------- */
+.table-container {
+  overflow-x: auto;
+  border-radius: var(--radius-lg);
+  background-color: var(--color-white);
+  box-shadow: var(--shadow-md);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm);
+}
+
+.data-table thead {
+  background-color: var(--color-primary-light);
+}
+
+.data-table th {
+  padding: var(--spacing-md) var(--spacing-lg);
+  text-align: left;
+  font-weight: 600;
+  color: var(--color-primary);
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.data-table td {
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: middle;
+}
+
+.data-table tbody tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.data-table tbody tr:hover {
+  background-color: var(--color-primary-light);
+}
+
+.data-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Summary row */
+.data-table .summary-row {
+  background-color: var(--color-primary-light) !important;
+  font-weight: 700;
+}
+
+.data-table .summary-row td {
+  border-top: 2px solid var(--color-accent);
+}
+
+/* --------------------------------------------------------------------------
+   7. FORM STYLES
+   -------------------------------------------------------------------------- */
+.form-card {
+  background-color: var(--color-white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: var(--spacing-xl);
+}
+
+.form-card .form-title {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  margin-bottom: var(--spacing-lg);
+  color: var(--color-text);
+}
+
+.form-group {
+  margin-bottom: var(--spacing-md);
+}
+
+.form-group label {
+  display: block;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  margin-bottom: var(--spacing-xs);
+  color: var(--color-text);
+}
+
+.form-control {
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+  background-color: var(--color-white);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.15);
+}
+
+.form-control::placeholder {
+  color: #999;
+}
+
+textarea.form-control {
+  min-height: 80px;
+  resize: vertical;
+}
+
+/* --------------------------------------------------------------------------
+   8. BUTTON STYLES
+   -------------------------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  transition: background-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+  white-space: nowrap;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn-primary {
+  background-color: var(--color-accent);
+  color: var(--color-white);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-accent-hover);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--color-accent);
+  border: 1px solid var(--color-accent);
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-primary-light);
+}
+
+.btn-danger {
+  background-color: var(--color-danger);
+  color: var(--color-white);
+}
+
+.btn-danger:hover {
+  background-color: var(--color-danger-hover);
+}
+
+.btn-icon {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: var(--radius-md);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-base);
+  transition: background-color var(--transition-fast);
+}
+
+.btn-icon:hover {
+  background-color: var(--color-primary-light);
+}
+
+.btn-icon.btn-icon-danger:hover {
+  background-color: #ffebee;
+  color: var(--color-danger);
+}
+
+.btn-icon.btn-icon-edit:hover {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+.btn-full {
+  width: 100%;
+}
+
+.btn-logout {
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--color-white);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+}
+
+.btn-logout:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* --------------------------------------------------------------------------
+   9. BADGE STYLES (TOTAL GASTO, SUELDO REAL, etc.)
+   -------------------------------------------------------------------------- */
+.badge-container {
+  display: flex;
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+  margin-bottom: var(--spacing-lg);
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md) var(--spacing-lg);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-white);
+  box-shadow: var(--shadow-sm);
+}
+
+.badge-icon {
+  font-size: var(--font-size-2xl);
+}
+
+.badge-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.badge-label {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-text-light);
+}
+
+.badge-value {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.badge-value.text-primary {
+  color: var(--color-primary);
+}
+
+.badge-value.text-danger {
+  color: var(--color-danger);
+}
+
+/* --------------------------------------------------------------------------
+   10. TOAST NOTIFICATION STYLES
+   -------------------------------------------------------------------------- */
+.toast-container {
+  position: fixed;
+  bottom: var(--spacing-xl);
+  right: var(--spacing-xl);
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-radius: var(--radius-md);
+  background-color: var(--color-white);
+  box-shadow: var(--shadow-lg);
+  min-width: 280px;
+  max-width: 400px;
+  animation: slideInRight 0.3s ease;
+}
+
+.toast-success {
+  border-left: 4px solid var(--color-success);
+}
+
+.toast-error {
+  border-left: 4px solid var(--color-danger);
+}
+
+.toast-warning {
+  border-left: 4px solid var(--color-warning);
+}
+
+.toast-info {
+  border-left: 4px solid var(--color-info);
+}
+
+.toast-icon {
+  font-size: var(--font-size-xl);
+  flex-shrink: 0;
+}
+
+.toast-message {
+  flex: 1;
+  font-size: var(--font-size-sm);
+}
+
+.toast-close {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-light);
+  padding: var(--spacing-xs);
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+}
+
+.toast.removing {
+  animation: fadeOut 0.3s ease forwards;
+}
+
+/* --------------------------------------------------------------------------
+   11. MODAL / OVERLAY STYLES
+   -------------------------------------------------------------------------- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal {
+  background-color: var(--color-white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: var(--spacing-xl);
+  max-width: 400px;
+  width: 90%;
+  animation: scaleIn 0.2s ease;
+}
+
+.modal-title {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  margin-bottom: var(--spacing-md);
+}
+
+.modal-body {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+  margin-bottom: var(--spacing-xl);
+  line-height: 1.5;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-sm);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   12. MONTH GRID (Nomina)
+   -------------------------------------------------------------------------- */
+.month-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-xl);
+}
+
+.month-card {
+  background-color: var(--color-white);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: box-shadow var(--transition-fast), transform var(--transition-fast), border-color var(--transition-fast);
+  border: 2px solid transparent;
+}
+
+.month-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.month-card.active {
+  border-color: var(--color-accent);
+}
+
+.month-card.current {
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-md);
+}
+
+.month-card .month-icon {
+  font-size: var(--font-size-3xl);
+  margin-bottom: var(--spacing-sm);
+}
+
+.month-card .month-name {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+}
+
+.month-card .month-badge {
+  display: inline-block;
+  margin-top: var(--spacing-xs);
+  padding: 2px var(--spacing-sm);
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
+   13. LOGIN SCREEN
+   -------------------------------------------------------------------------- */
+.login-screen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: var(--color-bg);
+}
+
+.login-card {
+  background-color: var(--color-white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: var(--spacing-2xl);
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+}
+
+.login-title {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: var(--spacing-md);
+}
+
+.login-subtitle {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+  margin-bottom: var(--spacing-xl);
+}
+
+.btn-microsoft {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md) var(--spacing-xl);
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  transition: background-color var(--transition-fast);
+}
+
+.btn-microsoft:hover {
+  background-color: var(--color-primary-dark);
+}
+
+/* --------------------------------------------------------------------------
+   14. UTILITY CLASSES
+   -------------------------------------------------------------------------- */
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-primary { color: var(--color-primary); }
+.text-accent { color: var(--color-accent); }
+.text-danger { color: var(--color-danger); }
+.text-light { color: var(--color-text-light); }
+.text-bold { font-weight: 700; }
+.text-sm { font-size: var(--font-size-sm); }
+.text-xs { font-size: var(--font-size-xs); }
+.text-lg { font-size: var(--font-size-lg); }
+.text-xl { font-size: var(--font-size-xl); }
+
+.mt-sm { margin-top: var(--spacing-sm); }
+.mt-md { margin-top: var(--spacing-md); }
+.mt-lg { margin-top: var(--spacing-lg); }
+.mt-xl { margin-top: var(--spacing-xl); }
+.mb-sm { margin-bottom: var(--spacing-sm); }
+.mb-md { margin-bottom: var(--spacing-md); }
+.mb-lg { margin-bottom: var(--spacing-lg); }
+.mb-xl { margin-bottom: var(--spacing-xl); }
+
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.flex-wrap { flex-wrap: wrap; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.justify-end { justify-content: flex-end; }
+.gap-sm { gap: var(--spacing-sm); }
+.gap-md { gap: var(--spacing-md); }
+.gap-lg { gap: var(--spacing-lg); }
+
+.hidden { display: none; }
+
+/* Page header */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-xl);
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+}
+
+.page-title {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+/* Module layout: table + sidebar form */
+.module-layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: var(--spacing-xl);
+  align-items: start;
+}
+
+/* Info cards row */
+.info-cards {
+  display: flex;
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+  margin-bottom: var(--spacing-lg);
+}
+
+.info-card {
+  background-color: var(--color-white);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-md) var(--spacing-lg);
+  box-shadow: var(--shadow-sm);
+  font-size: var(--font-size-sm);
+}
+
+.info-card-label {
+  color: var(--color-text-light);
+  font-size: var(--font-size-xs);
+}
+
+.info-card-value {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+/* Collapsible section */
+.collapsible-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-md);
+  background-color: var(--color-primary-light);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-weight: 600;
+  margin-top: var(--spacing-md);
+}
+
+.collapsible-content {
+  display: none;
+  padding: var(--spacing-md);
+}
+
+.collapsible-content.open {
+  display: block;
+}
+
+/* Inline edit mode */
+.data-table .editing td {
+  background-color: #fffde7;
+}
+
+.data-table .editing .form-control {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: var(--font-size-sm);
+}
+
+/* Loading spinner */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-2xl);
+}
+
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ==========================================================================
+   15. RESPONSIVE MEDIA QUERIES
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Tablet (768px - 1024px): Sidebar narrower
+   -------------------------------------------------------------------------- */
+@media (min-width: 768px) and (max-width: 1024px) {
+  :root {
+    --sidebar-width: 180px;
+  }
+
+  .main-content {
+    padding: var(--spacing-lg);
+  }
+
+  .module-layout {
+    grid-template-columns: 1fr 280px;
+  }
+
+  .data-table th,
+  .data-table td {
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Mobile (<768px): Sidebar off-canvas, full-width content
+   -------------------------------------------------------------------------- */
+@media (max-width: 767px) {
+  :root {
+    --sidebar-width: 260px;
+  }
+
+  .app-layout {
+    grid-template-columns: 1fr;
+  }
+
+  /* Sidebar off-canvas */
+  .sidebar {
+    transform: translateX(-100%);
+    width: var(--sidebar-width);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  /* Show hamburger */
+  .hamburger-btn {
+    display: flex;
+  }
+
+  /* Content full width */
+  .main-content {
+    padding: var(--spacing-md);
+    padding-top: calc(var(--spacing-md) + 56px);
+    min-height: 100vh;
+  }
+
+  /* Module layout stacks */
+  .module-layout {
+    grid-template-columns: 1fr;
+  }
+
+  /* Dashboard grid */
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Table responsive: horizontal scroll */
+  .table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .data-table {
+    min-width: 600px;
+  }
+
+  .data-table th,
+  .data-table td {
+    padding: var(--spacing-sm);
+    font-size: var(--font-size-xs);
+  }
+
+  /* Badges stack */
+  .badge-container {
+    flex-direction: column;
+  }
+
+  .badge {
+    width: 100%;
+  }
+
+  /* Page header */
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .page-title {
+    font-size: var(--font-size-xl);
+  }
+
+  /* Month grid */
+  .month-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-sm);
+  }
+
+  .month-card {
+    padding: var(--spacing-md);
+  }
+
+  .month-card .month-icon {
+    font-size: var(--font-size-xl);
+  }
+
+  /* Modal */
+  .modal {
+    width: 95%;
+    padding: var(--spacing-lg);
+  }
+
+  /* Toast */
+  .toast-container {
+    bottom: var(--spacing-md);
+    right: var(--spacing-md);
+    left: var(--spacing-md);
+  }
+
+  .toast {
+    min-width: auto;
+    max-width: 100%;
+  }
+
+  /* Info cards stack */
+  .info-cards {
+    flex-direction: column;
+  }
+
+  /* Form card */
+  .form-card {
+    padding: var(--spacing-lg);
+  }
+
+  /* Login */
+  .login-card {
+    padding: var(--spacing-xl);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Desktop (>1024px): Full sidebar (220px) - default styles
+   -------------------------------------------------------------------------- */
+@media (min-width: 1025px) {
+  .hamburger-btn {
+    display: none;
+  }
+
+  .sidebar-overlay {
+    display: none !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Print styles
+   -------------------------------------------------------------------------- */
+@media print {
+  .sidebar,
+  .hamburger-btn,
+  .toast-container,
+  .btn-icon,
+  .modal-overlay {
+    display: none !important;
+  }
+
+  .app-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .main-content {
+    padding: 0;
+  }
+
+  .card,
+  .table-container {
+    box-shadow: none;
+    border: 1px solid #ddd;
+  }
+}
+
+/* Value visibility toggle */
+/* visibility handled by JS */
+
+
+/* ========== MIS AHORROS - Card Layout ========== */
+.savings-cards { display: flex; flex-direction: column; gap: var(--spacing-md); }
+.savings-card {
+  background: var(--color-white); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm);
+  padding: var(--spacing-md) var(--spacing-lg); cursor: pointer;
+  transition: box-shadow 0.2s, transform 0.15s; border-left: 4px solid var(--color-accent);
+}
+.savings-card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+.savings-card.expanded { box-shadow: var(--shadow-md); }
+.savings-card-header { display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-md); }
+.savings-card-name { font-weight: 600; font-size: var(--font-size-base); color: var(--color-text); flex: 1; }
+.savings-card-total { font-weight: 700; font-size: var(--font-size-lg); color: var(--color-primary); }
+.savings-card-bar { height: 6px; background: #eee; border-radius: 3px; margin-top: 8px; overflow: hidden; display: flex; }
+.savings-card-bar span { height: 100%; transition: width 0.3s; }
+.savings-card-detail {
+  display: none; margin-top: var(--spacing-md); padding-top: var(--spacing-md);
+  border-top: 1px solid var(--color-border);
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px;
+}
+.savings-card.expanded .savings-card-detail { display: grid; }
+.savings-card:not(.expanded) .savings-card-detail { display: none; }
+.savings-detail-item { text-align: center; }
+.savings-detail-item .sdl { font-size: 0.65rem; color: var(--color-text-light); text-transform: uppercase; }
+.savings-detail-item .sdv { font-size: 0.85rem; font-weight: 600; color: var(--color-text); }
+.savings-card-actions { display: flex; gap: 4px; margin-left: 8px; }
+.savings-card-venc { font-size: 0.75rem; margin-top: 6px; }
+.savings-card-venc.venc-ok { color: var(--color-success); }
+.savings-card-venc.venc-warn { color: var(--color-warning); }
+.savings-card-venc.venc-danger { color: var(--color-danger); font-weight: 600; }
+.savings-summary {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-lg); padding: var(--spacing-md);
+  background: var(--color-primary-light); border-radius: var(--radius-lg);
+}
+.savings-summary-item { text-align: center; }
+.savings-summary-item .ssl { font-size: 0.65rem; color: var(--color-text-light); text-transform: uppercase; letter-spacing: 0.3px; }
+.savings-summary-item .ssv { font-size: 1rem; font-weight: 700; color: var(--color-primary); }
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+    <script src="https://alcdn.msauth.net/browser/2.38.0/js/msal-browser.min.js"></script>
+    <script>
+// constants.js - Constantes de la aplicacion: rutas de hojas Excel, nombres de meses,
+// configuracion de columnas por modulo, y rutas de navegacion.
+
+const MONTHS = [
+  { name: 'Enero', icon: String.fromCodePoint(0x2744, 0xFE0F) },
+  { name: 'Febrero', icon: String.fromCodePoint(0x1F495) },
+  { name: 'Marzo', icon: String.fromCodePoint(0x1F337) },
+  { name: 'Abril', icon: String.fromCodePoint(0x1F327, 0xFE0F) },
+  { name: 'Mayo', icon: String.fromCodePoint(0x1F33B) },
+  { name: 'Junio', icon: String.fromCodePoint(0x2600, 0xFE0F) },
+  { name: 'Julio', icon: String.fromCodePoint(0x1F334) },
+  { name: 'Agosto', icon: String.fromCodePoint(0x1F343) },
+  { name: 'Septiembre', icon: String.fromCodePoint(0x1F342) },
+  { name: 'Octubre', icon: String.fromCodePoint(0x1F383) },
+  { name: 'Noviembre', icon: String.fromCodePoint(0x1F341) },
+  { name: 'Diciembre', icon: String.fromCodePoint(0x1F384) }
+];
+
+/**
+ * SHEET_CONFIG maps module names to their Excel sheet configuration.
+ */
+const SHEET_CONFIG = {
+  'gastos-apartamento': {
+    sheetName: 'Gastos apartamento',
+    columns: ['Items', 'Costo', 'Observacion']
+  },
+  'gastos-obra': {
+    sheetName: 'Hoja 1',
+    columns: ['Materiales', 'Costos', 'Observacion']
+  },
+  'mis-ahorros': {
+    sheetName: 'Gatos',
+    columns: ['Rubro', 'Total', 'efectivo', 'CDT', 'Cuenta', 'Interes cdt', 'Bco santander', 'daviv bolsillo', 'dollar app', 'Vencimiento']
+  },
+  'nomina': {
+    getSheetName: (monthIndex) => {
+      const monthSheetNames = [
+        'gastos enero', 'gastos febrero', 'gastos marzo', 'gastos abril',
+        'gastos mayo', 'Gastos Junio', 'Gastos Julio', 'Gastos Agosto',
+        'Gastos Septiembre', 'Gastos Octubre', 'Gastos Noviembre', 'Gastos Diciembre'
+      ];
+      return monthSheetNames[monthIndex];
+    },
+    columns: ['Concepto', 'SueldoReal', 'Costo', 'Disponible'],
+    mapRow: (row, monthIndex) => {
+      if (monthIndex === 2 || monthIndex === 3) {
+        return [row[3] || '', row[0] || '0', row[4] || '0', row[2] || '0'];
+      }
+      return row;
+    }
+  },
+  'bono': {
+    sheetName: 'Bono',
+    columns: ['Concepto', 'Valor']
+  }
+};
+
+/**
+ * MODULE_COLUMNS defines the display configuration for each module's table.
+ */
+const MODULE_COLUMNS = {
+  'gastos-apartamento': {
+    headers: ['ITEMS', 'COSTOS', 'OBSERVACION', 'ACCIONES'],
+    dataKeys: ['item', 'costo', 'observacion']
+  },
+  'gastos-obra': {
+    headers: ['MATERIALES', 'COSTOS', 'OBSERVACION', 'ACCIONES'],
+    dataKeys: ['material', 'costo', 'observacion']
+  },
+  'mis-ahorros': {
+    headers: ['ACCIONES', 'RUBRO', 'TOTAL', 'EFECTIVO', 'CDT', 'CUENTA', 'INTERES CDT', 'BCO SANTANDER', 'DAVIV BOLSILLO', 'DOLLAR APP', 'VENCIMIENTO'],
+    dataKeys: ['rubro', 'total', 'efectivo', 'cdt', 'cuenta', 'interesCdt', 'bcoSantander', 'davivBolsillo', 'dollarApp', 'vencimiento']
+  },
+  'nomina': {
+    headers: ['CONCEPTO', 'SUELDO REAL', 'COSTO', 'DISPONIBLE', 'ACCIONES'],
+    dataKeys: ['concepto', 'sueldoReal', 'costo', 'disponible']
+  }
+};
+
+/**
+ * ROUTES maps hash paths to module identifiers.
+ */
+const ROUTES = {
+  '#/': 'dashboard',
+  '#/gastos-apartamento': 'gastos-apartamento',
+  '#/gastos-obra': 'gastos-obra',
+  '#/mis-ahorros': 'mis-ahorros',
+  '#/nomina': 'nomina'
+};
+
+// Global value visibility state
+let _valuesVisible = true;
+function isValuesVisible() { return _valuesVisible; }
+function maskValue(val) { return val; }
+// After render, mark all monetary cells with real value
+function markMonetaryCells() {
+  document.querySelectorAll('.data-table td').forEach(td => {
+    if (td.classList.contains('actions-cell')) return;
+    const text = td.textContent;
+    if (text && text.match(/^\\$/) && !td.hasAttribute('data-real')) {
+      td.setAttribute('data-real', text);
+      if (!_valuesVisible) td.textContent = '***';
+    }
+  });
+  document.querySelectorAll('.badge-value').forEach(el => {
+    if (!el.hasAttribute('data-real')) {
+      el.setAttribute('data-real', el.textContent);
+      if (!_valuesVisible) el.textContent = '***';
+    }
+  });
+}
+function toggleValuesVisibility() {
+  _valuesVisible = !_valuesVisible; sessionStorage.setItem('valVisible', _valuesVisible);
+  // Force re-render current view
+  var evt = new HashChangeEvent('hashchange');
+  window.dispatchEvent(evt);
+  // Update eye icon
+  var eyeEl = document.getElementById('eye-float');
+  if (eyeEl) eyeEl.textContent = _valuesVisible ? String.fromCodePoint(0x1F440) : String.fromCodePoint(0x1F441);
+}
+// formatter.js - Utilidades de formateo de moneda colombiana (COP).
+// Funciones formatCOP y parseCOP para conversion de montos.
+
+/**
+ * Format a number as Colombian Peso (COP).
+ * Uses dot as thousands separator and no decimals.
+ * @param {number} amount - The amount to format
+ * @returns {string} Formatted string like '$ 1.500.000'
+ */
+function formatCOP(amount) {
+  if (amount === null || amount === undefined || isNaN(amount)) {
+    return '$ 0';
+  }
+  const rounded = Math.round(Number(amount));
+  const formatted = Math.abs(rounded).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  return rounded < 0 ? '$ -' + formatted : '$ ' + formatted;
+}
+
+/**
+ * Parse a COP-formatted string back to a number.
+ * Removes '$', spaces, and dots (thousands separator), parses remaining digits.
+ * @param {string} str - The formatted string (e.g., '$ 1.500.000')
+ * @returns {number} The numeric value
+ */
+function parseCOP(str) {
+  if (!str || typeof str !== 'string') {
+    return 0;
+  }
+  const cleaned = str.replace(/\$\s*/g, '').replace(/\./g, '').trim();
+  const num = parseInt(cleaned, 10);
+  return isNaN(num) ? 0 : num;
+}
+// cache.js - Capa de abstraccion sobre IndexedDB para cache local de datos
+// de hojas y operaciones pendientes.
+
+const CacheModule = (() => {
+  const DB_NAME = 'finance-portal-db';
+  const DB_VERSION = 1;
+  const STORES = {
+    SHEET_CACHE: 'sheet-cache',
+    PENDING_OPS: 'pending-operations',
+    USER_PREFS: 'user-preferences'
+  };
+
+  let db = null;
+  let fallbackStore = {}; // Memory fallback if IndexedDB unavailable
+  let usesFallback = false;
+
+  /**
+   * Open or create the IndexedDB database with required object stores.
+   * Falls back to in-memory storage if IndexedDB is unavailable.
+   * @returns {Promise<void>}
+   */
+  async function initialize() {
+    // Check if IndexedDB is available
+    if (!window.indexedDB) {
+      console.warn('IndexedDB not available. Using in-memory fallback.');
+      usesFallback = true;
+      fallbackStore = {
+        [STORES.SHEET_CACHE]: {},
+        [STORES.PENDING_OPS]: {},
+        [STORES.USER_PREFS]: {}
+      };
+      return;
+    }
+
+    return new Promise((resolve, reject) => {
+      const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+      request.onupgradeneeded = (event) => {
+        const database = event.target.result;
+
+        // Create sheet-cache store (keyed by sheetName)
+        if (!database.objectStoreNames.contains(STORES.SHEET_CACHE)) {
+          database.createObjectStore(STORES.SHEET_CACHE, { keyPath: 'sheetName' });
+        }
+
+        // Create pending-operations store (keyed by id, indexed by timestamp)
+        if (!database.objectStoreNames.contains(STORES.PENDING_OPS)) {
+          const pendingStore = database.createObjectStore(STORES.PENDING_OPS, { keyPath: 'id' });
+          pendingStore.createIndex('timestamp', 'timestamp', { unique: false });
+        }
+
+        // Create user-preferences store (keyed by key)
+        if (!database.objectStoreNames.contains(STORES.USER_PREFS)) {
+          database.createObjectStore(STORES.USER_PREFS, { keyPath: 'key' });
+        }
+      };
+
+      request.onsuccess = (event) => {
+        db = event.target.result;
+
+        // Handle connection errors gracefully
+        db.onerror = (event) => {
+          console.error('IndexedDB error:', event.target.error);
+        };
+
+        resolve();
+      };
+
+      request.onerror = (event) => {
+        console.warn('IndexedDB open failed, using fallback:', event.target.error);
+        usesFallback = true;
+        fallbackStore = {
+          [STORES.SHEET_CACHE]: {},
+          [STORES.PENDING_OPS]: {},
+          [STORES.USER_PREFS]: {}
+        };
+        resolve(); // Don't reject - use fallback instead
+      };
+    });
+  }
+
+  /**
+   * Save sheet data to cache.
+   * @param {string} sheetName - The sheet identifier
+   * @param {object} data - The sheet data (headers, values, etc.)
+   * @returns {Promise<void>}
+   */
+  async function saveSheetData(sheetName, data) {
+    if (usesFallback) {
+      fallbackStore[STORES.SHEET_CACHE][sheetName] = {
+        sheetName,
+        data,
+        timestamp: Date.now()
+      };
+      return;
+    }
+
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction(STORES.SHEET_CACHE, 'readwrite');
+      const store = transaction.objectStore(STORES.SHEET_CACHE);
+
+      const record = {
+        sheetName,
+        data,
+        timestamp: Date.now()
+      };
+
+      const request = store.put(record);
+      request.onsuccess = () => resolve();
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  /**
+   * Get cached sheet data.
+   * @param {string} sheetName - The sheet identifier
+   * @returns {Promise<object|null>} The cached data or null
+   */
+  async function getSheetData(sheetName) {
+    if (usesFallback) {
+      const record = fallbackStore[STORES.SHEET_CACHE][sheetName];
+      return record ? record.data : null;
+    }
+
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction(STORES.SHEET_CACHE, 'readonly');
+      const store = transaction.objectStore(STORES.SHEET_CACHE);
+
+      const request = store.get(sheetName);
+      request.onsuccess = () => {
+        const result = request.result;
+        resolve(result ? result.data : null);
+      };
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  /**
+   * Save a pending sync operation.
+   * @param {object} op - The operation object with id, type, module, sheetName, values, etc.
+   * @returns {Promise<void>}
+   */
+  async function savePendingOperation(op) {
+    // Ensure the operation has an id and timestamp
+    if (!op.id) {
+      op.id = generateId();
+    }
+    if (!op.timestamp) {
+      op.timestamp = Date.now();
+    }
+
+    if (usesFallback) {
+      fallbackStore[STORES.PENDING_OPS][op.id] = op;
+      return;
+    }
+
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction(STORES.PENDING_OPS, 'readwrite');
+      const store = transaction.objectStore(STORES.PENDING_OPS);
+
+      const request = store.put(op);
+      request.onsuccess = () => resolve();
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  /**
+   * Get all pending operations ordered by timestamp (FIFO).
+   * @returns {Promise<Array<object>>} Array of pending operations
+   */
+  async function getPendingOperations() {
+    if (usesFallback) {
+      return Object.values(fallbackStore[STORES.PENDING_OPS])
+        .sort((a, b) => a.timestamp - b.timestamp);
+    }
+
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction(STORES.PENDING_OPS, 'readonly');
+      const store = transaction.objectStore(STORES.PENDING_OPS);
+      const index = store.index('timestamp');
+
+      const request = index.getAll();
+      request.onsuccess = () => resolve(request.result || []);
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  /**
+   * Remove a pending operation by id.
+   * @param {string} id - The operation id to remove
+   * @returns {Promise<void>}
+   */
+  async function removePendingOperation(id) {
+    if (usesFallback) {
+      delete fallbackStore[STORES.PENDING_OPS][id];
+      return;
+    }
+
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction(STORES.PENDING_OPS, 'readwrite');
+      const store = transaction.objectStore(STORES.PENDING_OPS);
+
+      const request = store.delete(id);
+      request.onsuccess = () => resolve();
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  /**
+   * Clear all data from all stores.
+   * @returns {Promise<void>}
+   */
+  async function clearAll() {
+    if (usesFallback) {
+      fallbackStore = {
+        [STORES.SHEET_CACHE]: {},
+        [STORES.PENDING_OPS]: {},
+        [STORES.USER_PREFS]: {}
+      };
+      return;
+    }
+
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction(
+        [STORES.SHEET_CACHE, STORES.PENDING_OPS, STORES.USER_PREFS],
+        'readwrite'
+      );
+
+      transaction.objectStore(STORES.SHEET_CACHE).clear();
+      transaction.objectStore(STORES.PENDING_OPS).clear();
+      transaction.objectStore(STORES.USER_PREFS).clear();
+
+      transaction.oncomplete = () => resolve();
+      transaction.onerror = () => reject(transaction.error);
+    });
+  }
+
+  /**
+   * Generate a unique ID for operations.
+   * @returns {string} A unique identifier
+   */
+  function generateId() {
+    return Date.now().toString(36) + '-' + Math.random().toString(36).substr(2, 9);
+  }
+
+  return {
+    initialize,
+    saveSheetData,
+    getSheetData,
+    savePendingOperation,
+    getPendingOperations,
+    removePendingOperation,
+    clearAll
+  };
+})();
+// auth.js - Wrapper de MSAL.js para autenticacion con Microsoft Identity Platform.
+// Gestiona login, logout, tokens y sesion.
+
+const AuthModule = (() => {
+  // MSAL configuration - user must replace clientId with their Azure AD app registration
+  const msalConfig = {
+    auth: {
+      clientId: 'e76d7cfb-fb9d-4f40-b1b7-97862266d109', // Replace with Azure AD app registration client ID
+      authority: 'https://login.microsoftonline.com/consumers',
+      redirectUri: window.location.origin + window.location.pathname
+    },
+    cache: {
+      cacheLocation: 'localStorage',
+      storeAuthStateInCookie: false
+    }
+  };
+
+  const loginRequest = { scopes: ['User.Read', 'Files.ReadWrite', 'Mail.Send'] };
+
+  let msalInstance = null;
+  let currentAccount = null;
+
+  /**
+   * Initialize MSAL PublicClientApplication and check for existing accounts.
+   * Should be called on app startup.
+   */
+  function initialize() {
+    try {
+      msalInstance = new msal.PublicClientApplication(msalConfig);
+
+      // Handle redirect promise (for loginRedirect flow)
+      msalInstance.handleRedirectPromise().then((response) => {
+        if (response) {
+          currentAccount = response.account;
+        } else {
+          // Check if there are already signed-in accounts
+          const accounts = msalInstance.getAllAccounts();
+          if (accounts.length > 0) {
+            currentAccount = accounts[0];
+          }
+        }
+      }).catch((error) => {
+        console.error('MSAL redirect handling error:', error);
+      });
+
+      // Also check accounts synchronously for immediate availability
+      const accounts = msalInstance.getAllAccounts();
+      if (accounts.length > 0) {
+        currentAccount = accounts[0];
+      }
+    } catch (error) {
+      console.error('MSAL initialization error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Login the user. Tries acquireTokenSilent first (if account exists),
+   * then falls back to loginPopup, then loginRedirect.
+   * Token renewal is automatic and silent (session persists indefinitely per Requisito 10).
+   * @returns {Promise<object>} The authentication result
+   */
+  async function login() {
+    if (!msalInstance) {
+      throw new Error('MSAL not initialized. Call initialize() first.');
+    }
+
+    // If we already have an account, try silent token acquisition
+    if (currentAccount) {
+      try {
+        const silentResult = await msalInstance.acquireTokenSilent({
+          ...loginRequest,
+          account: currentAccount
+        });
+        currentAccount = silentResult.account;
+        return silentResult;
+      } catch (silentError) {
+        // Silent acquisition failed, proceed to interactive
+        console.warn('Silent token acquisition failed, falling back to interactive:', silentError);
+      }
+    }
+
+    // Try popup login first
+    try {
+      const popupResult = await msalInstance.loginPopup(loginRequest);
+      currentAccount = popupResult.account;
+      return popupResult;
+    } catch (popupError) {
+      // If popup is blocked or fails, fall back to redirect
+      if (popupError.errorCode === 'popup_window_error' ||
+          popupError.errorCode === 'empty_window_error' ||
+          popupError.errorCode === 'user_cancelled') {
+        console.warn('Popup login failed, falling back to redirect:', popupError);
+        await msalInstance.loginRedirect(loginRequest);
+        return null;
+      }
+      throw popupError;
+    }
+  }
+
+  /**
+   * Get a valid access token for the given scopes.
+   * Always attempts silent renewal first; falls back to popup if needed.
+   * Token renewal is automatic - no timeout, session persists indefinitely.
+   * @param {string[]} scopes - The scopes to request
+   * @returns {Promise<string>} A valid access token
+   */
+  async function getToken(scopes) {
+    if (!msalInstance) {
+      throw new Error('MSAL not initialized. Call initialize() first.');
+    }
+
+    if (!currentAccount) {
+      throw new Error('No authenticated account. Call login() first.');
+    }
+
+    const tokenRequest = {
+      scopes: scopes || loginRequest.scopes,
+      account: currentAccount
+    };
+
+    try {
+      // Silent token acquisition - MSAL handles renewal automatically
+      const response = await msalInstance.acquireTokenSilent(tokenRequest);
+      currentAccount = response.account;
+      return response.accessToken;
+    } catch (silentError) {
+      // If silent fails (e.g., token expired beyond refresh window), try popup
+      console.warn('Silent token acquisition failed, trying popup:', silentError);
+      try {
+        const response = await msalInstance.acquireTokenPopup(tokenRequest);
+        currentAccount = response.account;
+        return response.accessToken;
+      } catch (popupError) {
+        // If token is corrupted/invalid, clear and redirect to login
+        if (popupError.errorCode === 'invalid_grant' ||
+            popupError.errorCode === 'interaction_required') {
+          currentAccount = null;
+          throw new Error('Session expired. Please login again.');
+        }
+        throw popupError;
+      }
+    }
+  }
+
+  /**
+   * Logout the current user via popup.
+   */
+  async function logout() {
+    if (!msalInstance) {
+      throw new Error('MSAL not initialized.');
+    }
+
+    try {
+      await msalInstance.logoutPopup({
+        account: currentAccount
+      });
+    } catch (error) {
+      // Fallback to redirect logout if popup fails
+      console.warn('Popup logout failed, trying redirect:', error);
+      await msalInstance.logoutRedirect({
+        account: currentAccount
+      });
+    }
+
+    currentAccount = null;
+  }
+
+  /**
+   * Check if a user is currently authenticated.
+   * @returns {boolean} True if there is an active account
+   */
+  function isAuthenticated() {
+    return currentAccount !== null;
+  }
+
+  /**
+   * Get the current user's profile information.
+   * @returns {object|null} User info with displayName, email, and avatar initial
+   */
+  function getCurrentUser() {
+    if (!currentAccount) {
+      return null;
+    }
+
+    const displayName = currentAccount.name || currentAccount.username || 'Usuario';
+    const email = currentAccount.username || '';
+    const avatarInitial = displayName.charAt(0).toUpperCase();
+
+    return {
+      displayName,
+      email,
+      avatarInitial
+    };
+  }
+
+  return {
+    initialize,
+    login,
+    getToken,
+    logout,
+    isAuthenticated,
+    getCurrentUser
+  };
+})();
+// graph.js - Cliente de Microsoft Graph API para operaciones CRUD sobre hojas Excel en OneDrive.
+
+const GraphModule = (() => {
+  const GRAPH_BASE = 'https://graph.microsoft.com/v1.0';
+  // The Excel file path on OneDrive
+  // Excel file paths on OneDrive (root level)
+  const FILE_PATHS = {
+    'mis-cuentas': '/me/drive/root:/mis cuentas.xlsx:/workbook',
+    'costos-obra': '/me/drive/root:/costos construcci%C3%B3n apartamento.xlsx:/workbook'
+  };
+
+  function getFilePath(sheetName) {
+    // "Hoja 1" is in the costos construccion file
+    if (sheetName === 'Hoja 1') return FILE_PATHS['costos-obra'];
+    return FILE_PATHS['mis-cuentas'];
+  }
+
+  /**
+   * Make an authenticated call to Microsoft Graph API.
+   * @param {string} endpoint - The API endpoint (appended to GRAPH_BASE)
+   * @param {string} method - HTTP method (GET, POST, PATCH, DELETE)
+   * @param {object|null} body - Request body for POST/PATCH
+   * @returns {Promise<object|null>} Parsed JSON response or null for 204
+   */
+  async function callGraph(endpoint, method, body) {
+    const token = await AuthModule.getToken(['Files.ReadWrite']);
+
+    const options = {
+      method: method || 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      }
+    };
+
+    if (body) {
+      options.body = JSON.stringify(body);
+    }
+
+    const response = await fetch(GRAPH_BASE + endpoint, options);
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      const error = new Error('Graph API error: ' + response.status);
+      error.status = response.status;
+      error.body = errorText;
+
+      // Handle rate limiting
+      if (response.status === 429) {
+        const retryAfter = response.headers.get('Retry-After');
+        error.retryAfter = retryAfter ? parseInt(retryAfter, 10) * 1000 : 5000;
+      }
+
+      throw error;
+    }
+
+    // No content response
+    if (response.status === 204) {
+      return null;
+    }
+
+    return response.json();
+  }
+
+  /**
+   * Read all data from a worksheet's used range.
+   * @param {string} sheetName - The name of the worksheet to read
+   * @returns {Promise<{values: Array<Array<string>>, headers: Array<string>}>}
+   */
+  async function readSheet(sheetName) {
+    const endpoint = getFilePath(sheetName) + `/worksheets('${encodeURIComponent(sheetName)}')/usedRange`;
+    const result = await callGraph(endpoint, 'GET');
+
+    if (!result || !result.values || result.values.length === 0) {
+      return { values: [], headers: [] };
+    }
+
+    const headers = result.values[0];
+    const values = result.values.slice(1);
+
+    return {
+      headers,
+      values,
+      address: result.address,
+      rowCount: result.rowCount,
+      columnCount: result.columnCount
+    };
+  }
+
+  /**
+   * Add a new row at the end of the used range in a worksheet.
+   * @param {string} sheetName - The name of the worksheet
+   * @param {Array<string|number>} values - The values for the new row
+   * @returns {Promise<object>} The API response
+   */
+  async function addRow(sheetName, values) {
+    // First get the used range to know where to insert
+    const rangeEndpoint = getFilePath(sheetName) + `/worksheets('${encodeURIComponent(sheetName)}')/usedRange`;
+    const currentRange = await callGraph(rangeEndpoint, 'GET');
+
+    let targetRow;
+    if (!currentRange || !currentRange.address) {
+      // Empty sheet, start at row 2 (after headers in row 1)
+      targetRow = 2;
+    } else {
+      // Parse the address to find the last row
+      // Address format: 'SheetName!A1:C10'
+      const addressParts = currentRange.address.split('!')[1];
+      const endCell = addressParts.split(':')[1];
+      const lastRow = parseInt(endCell.replace(/[A-Z]/g, ''), 10);
+      targetRow = lastRow + 1;
+    }
+
+    // Calculate the range address for the new row
+    const startCol = 'A';
+    const endCol = String.fromCharCode(64 + values.length); // A=65, so 64+1=A, 64+2=B, etc.
+    const rangeAddress = `${startCol}${targetRow}:${endCol}${targetRow}`;
+
+    const patchEndpoint = getFilePath(sheetName) + `/worksheets('${encodeURIComponent(sheetName)}')/range(address='${rangeAddress}')`;
+    return await callGraph(patchEndpoint, 'PATCH', {
+      values: [values]
+    });
+  }
+
+  /**
+   * Update a specific row in a worksheet.
+   * @param {string} sheetName - The name of the worksheet
+   * @param {number} rowIndex - The 1-based row index (excluding header row, so 1 = first data row)
+   * @param {Array<string|number>} values - The new values for the row
+   * @returns {Promise<object>} The API response
+   */
+  async function updateRow(sheetName, rowIndex, values) {
+    // rowIndex is data-relative (1 = first data row), actual row = rowIndex + 1 (header is row 1)
+    const actualRow = rowIndex + 1;
+    const startCol = 'A';
+    const endCol = String.fromCharCode(64 + values.length);
+    const rangeAddress = `${startCol}${actualRow}:${endCol}${actualRow}`;
+
+    const endpoint = getFilePath(sheetName) + `/worksheets('${encodeURIComponent(sheetName)}')/range(address='${rangeAddress}')`;
+    return await callGraph(endpoint, 'PATCH', {
+      values: [values]
+    });
+  }
+
+  /**
+   * Delete a specific row by shifting cells up.
+   * @param {string} sheetName - The name of the worksheet
+   * @param {number} rowIndex - The 1-based row index (excluding header row)
+   * @returns {Promise<object|null>} The API response
+   */
+  async function deleteRow(sheetName, rowIndex) {
+    // Get the used range to know column count
+    const rangeEndpoint = getFilePath(sheetName) + `/worksheets('${encodeURIComponent(sheetName)}')/usedRange`;
+    const currentRange = await callGraph(rangeEndpoint, 'GET');
+
+    const actualRow = rowIndex + 1;
+    const startCol = 'A';
+    const endCol = String.fromCharCode(64 + (currentRange.columnCount || 3));
+    const rangeAddress = `${startCol}${actualRow}:${endCol}${actualRow}`;
+
+    const endpoint = getFilePath(sheetName) + `/worksheets('${encodeURIComponent(sheetName)}')/range(address='${rangeAddress}')/delete`;
+    return await callGraph(endpoint, 'POST', {
+      shift: 'Up'
+    });
+  }
+
+  return {
+    readSheet,
+    addRow,
+    updateRow,
+    deleteRow
+  };
+})();
+// sync.js - Modulo de sincronizacion con cola FIFO, reintentos con backoff
+// exponencial y gestion de estado online/offline.
+
+const SyncModule = (() => {
+  let isProcessing = false;
+  let isOnline = navigator.onLine;
+  let lastSyncTimestamp = null;
+  let currentError = null;
+  const MAX_RETRIES = 3;
+  const BACKOFF_BASE = 1000; // 1s base -> 1s, 2s, 4s
+  const SEND_TIMEOUT = 5000; // Max 5 seconds to send operation when online
+
+  // Listen for online/offline events
+  window.addEventListener('online', () => {
+    isOnline = true;
+    // Process pending operations when connectivity is restored
+    processQueue();
+  });
+
+  window.addEventListener('offline', () => {
+    isOnline = false;
+  });
+
+  /**
+   * Enqueue a new sync operation. Saves to IndexedDB via CacheModule
+   * and triggers processing if online.
+   * @param {object} operation - The operation to enqueue
+   * @param {string} operation.type - 'create' | 'update' | 'delete'
+   * @param {string} operation.module - Module name (e.g., 'gastos-apartamento')
+   * @param {string} operation.sheetName - Target Excel sheet name
+   * @param {number} [operation.rowIndex] - Row index for update/delete
+   * @param {Array} [operation.values] - Values for create/update
+   * @returns {Promise<string>} The operation id
+   */
+  async function enqueue(operation) {
+    const op = {
+      id: generateId(),
+      timestamp: Date.now(),
+      type: operation.type,
+      module: operation.module,
+      sheetName: operation.sheetName,
+      rowIndex: operation.rowIndex || null,
+      values: operation.values || null,
+      retryCount: 0,
+      status: 'pending'
+    };
+
+    await CacheModule.savePendingOperation(op);
+
+    // Trigger processing if we're online
+    if (isOnline && !isProcessing) {
+      processQueue();
+    }
+
+    return op.id;
+  }
+
+  /**
+   * Process all pending operations in FIFO order.
+   * Each operation is attempted with a timeout of 5 seconds.
+   * Failed operations are retried with exponential backoff.
+   */
+  async function processQueue() {
+    if (isProcessing || !isOnline) {
+      return;
+    }
+
+    isProcessing = true;
+    currentError = null;
+
+    try {
+      const pendingOps = await CacheModule.getPendingOperations();
+
+      for (const op of pendingOps) {
+        if (!isOnline) {
+          break; // Stop if we went offline during processing
+        }
+
+        // Skip already failed operations (they stay in queue for manual retry)
+        if (op.status === 'failed') {
+          continue;
+        }
+
+        try {
+          // Mark as processing
+          op.status = 'processing';
+          await CacheModule.savePendingOperation(op);
+
+          // Execute with timeout
+          await executeWithTimeout(op, SEND_TIMEOUT);
+
+          // Success - remove from queue
+          await CacheModule.removePendingOperation(op.id);
+          lastSyncTimestamp = Date.now();
+        } catch (error) {
+          // Handle retry logic
+          await handleRetry(op, error);
+        }
+      }
+    } catch (error) {
+      currentError = error.message || 'Queue processing error';
+      console.error('Sync queue processing error:', error);
+    } finally {
+      isProcessing = false;
+    }
+  }
+
+  /**
+   * Execute an operation with a timeout.
+   * @param {object} op - The operation to execute
+   * @param {number} timeout - Timeout in milliseconds
+   * @returns {Promise<void>}
+   */
+  async function executeWithTimeout(op, timeout) {
+    return new Promise((resolve, reject) => {
+      const timer = setTimeout(() => {
+        reject(new Error('Operation timed out'));
+      }, timeout);
+
+      executeOperation(op)
+        .then((result) => {
+          clearTimeout(timer);
+          resolve(result);
+        })
+        .catch((error) => {
+          clearTimeout(timer);
+          reject(error);
+        });
+    });
+  }
+
+  /**
+   * Execute a single operation by calling the appropriate GraphModule method.
+   * @param {object} op - The operation to execute
+   * @returns {Promise<any>}
+   */
+  async function executeOperation(op) {
+    switch (op.type) {
+      case 'create':
+        return await GraphModule.addRow(op.sheetName, op.values);
+      case 'update':
+        return await GraphModule.updateRow(op.sheetName, op.rowIndex, op.values);
+      case 'delete':
+        return await GraphModule.deleteRow(op.sheetName, op.rowIndex);
+      default:
+        throw new Error('Unknown operation type: ' + op.type);
+    }
+  }
+
+  /**
+   * Handle retry logic with exponential backoff.
+   * After MAX_RETRIES failures: mark as 'failed', notify user, keep in queue.
+   * @param {object} op - The failed operation
+   * @param {Error} error - The error that occurred
+   */
+  async function handleRetry(op, error) {
+    op.retryCount = (op.retryCount || 0) + 1;
+
+    if (op.retryCount >= MAX_RETRIES) {
+      // Max retries reached - mark as failed
+      op.status = 'failed';
+      op.lastError = error.message || 'Unknown error';
+      await CacheModule.savePendingOperation(op);
+
+      currentError = `Operation failed after ${MAX_RETRIES} retries: ${op.lastError}`;
+
+      // Notify user about the failure
+      notifyUser(op);
+    } else {
+      // Calculate backoff delay: 1s, 2s, 4s (exponential)
+      const delay = BACKOFF_BASE * Math.pow(2, op.retryCount - 1);
+
+      op.status = 'pending';
+      op.lastError = error.message || 'Unknown error';
+      await CacheModule.savePendingOperation(op);
+
+      // Wait for backoff period then retry
+      await new Promise(resolve => setTimeout(resolve, delay));
+
+      // Retry the operation if still online
+      if (isOnline) {
+        try {
+          await executeWithTimeout(op, SEND_TIMEOUT);
+          await CacheModule.removePendingOperation(op.id);
+          lastSyncTimestamp = Date.now();
+        } catch (retryError) {
+          await handleRetry(op, retryError);
+        }
+      }
+    }
+  }
+
+  /**
+   * Notify the user about a failed sync operation.
+   * @param {object} op - The failed operation
+   */
+  function notifyUser(op) {
+    // Dispatch a custom event that UI components can listen to
+    const event = new CustomEvent('sync-error', {
+      detail: {
+        operation: op,
+        message: `Sync failed for ${op.type} on ${op.sheetName}: ${op.lastError}`
+      }
+    });
+    window.dispatchEvent(event);
+  }
+
+  /**
+   * Get the current sync status.
+   * @returns {object} Status with isOnline, pendingCount, lastSyncTimestamp, currentError
+   */
+  function getStatus() {
+    return {
+      isOnline,
+      isProcessing,
+      lastSyncTimestamp,
+      currentError
+    };
+  }
+
+  /**
+   * Get the count of pending operations (async).
+   * @returns {Promise<number>}
+   */
+  async function getPendingCount() {
+    const ops = await CacheModule.getPendingOperations();
+    return ops.length;
+  }
+
+  /**
+   * Force process the queue immediately, regardless of current state.
+   * @returns {Promise<void>}
+   */
+  async function forceSync() {
+    isProcessing = false; // Reset processing flag to allow re-entry
+    await processQueue();
+  }
+
+  /**
+   * Generate a unique ID for operations.
+   * @returns {string}
+   */
+  function generateId() {
+    return Date.now().toString(36) + '-' + Math.random().toString(36).substr(2, 9);
+  }
+
+  return {
+    enqueue,
+    processQueue,
+    getStatus,
+    getPendingCount,
+    forceSync
+  };
+})();
+// components.js - Componentes UI reutilizables: tabla generica, badge total,
+// formulario, modal confirmacion y toast notificacion.
+
+const Components = (() => {
+
+  /**
+   * Create a data table with headers, rows and optional action buttons.
+   * @param {Array<string>} headers - Column header labels
+   * @param {Array<Array<string>>} rows - 2D array of row data
+   * @param {object} actions - { onEdit: fn(rowIndex), onDelete: fn(rowIndex) }
+   * @param {object} options - { actionsFirst: boolean }
+   * @returns {HTMLElement}
+   */
+  function createTable(headers, rows, actions, options = {}) {
+    const container = document.createElement('div');
+    container.className = 'table-container';
+
+    const table = document.createElement('table');
+    table.className = 'data-table';
+
+    // Thead
+    const thead = document.createElement('thead');
+    const headerRow = document.createElement('tr');
+    headers.forEach(h => {
+      const th = document.createElement('th');
+      th.textContent = h;
+      headerRow.appendChild(th);
+    });
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+
+    // Tbody
+    const tbody = document.createElement('tbody');
+    rows.forEach((row, rowIdx) => {
+      const tr = document.createElement('tr');
+      tr.dataset.rowIndex = rowIdx;
+
+      if (options.actionsFirst) {
+        // Actions column first
+        tr.appendChild(createActionsCell(rowIdx, actions));
+        row.forEach(cell => {
+          const td = document.createElement('td');
+          td.textContent = cell;
+          tr.appendChild(td);
+        });
+      } else {
+        // Data columns first, actions last
+        row.forEach(cell => {
+          const td = document.createElement('td');
+          td.textContent = cell;
+          tr.appendChild(td);
+        });
+        if (actions) {
+          tr.appendChild(createActionsCell(rowIdx, actions));
+        }
+      }
+
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    container.appendChild(table);
+
+    return container;
+  }
+
+  /**
+   * Create an actions cell with edit and delete buttons.
+   */
+  function createActionsCell(rowIdx, actions) {
+    const td = document.createElement('td');
+    td.className = 'actions-cell';
+
+    if (actions && actions.onEdit) {
+      const editBtn = document.createElement('button');
+      editBtn.className = 'btn-icon btn-icon-edit';
+      editBtn.textContent = '\u270F\uFE0F';
+      editBtn.title = 'Editar';
+      editBtn.setAttribute('aria-label', 'Editar fila ' + (rowIdx + 1));
+      editBtn.addEventListener('click', () => actions.onEdit(rowIdx));
+      td.appendChild(editBtn);
+    }
+
+    if (actions && actions.onDelete) {
+      const delBtn = document.createElement('button');
+      delBtn.className = 'btn-icon btn-icon-danger';
+      delBtn.textContent = '\uD83D\uDDD1\uFE0F';
+      delBtn.title = 'Eliminar';
+      delBtn.setAttribute('aria-label', 'Eliminar fila ' + (rowIdx + 1));
+      delBtn.addEventListener('click', () => actions.onDelete(rowIdx));
+      td.appendChild(delBtn);
+    }
+
+    if (actions && actions.onCheck) {
+      const checkBtn = document.createElement('button');
+      checkBtn.className = 'btn-icon';
+      checkBtn.textContent = '\u2713';
+      checkBtn.title = 'Confirmar';
+      checkBtn.setAttribute('aria-label', 'Confirmar fila ' + (rowIdx + 1));
+      checkBtn.addEventListener('click', () => actions.onCheck(rowIdx));
+      td.appendChild(checkBtn);
+    }
+
+    return td;
+  }
+
+  /**
+   * Create a badge card showing a label and value with an icon.
+   * @param {string} label - Badge label (e.g., 'TOTAL GASTO')
+   * @param {string} value - Badge value (e.g., '$ 1.500.000')
+   * @param {string} icon - Emoji icon
+   * @returns {HTMLElement}
+   */
+  function createBadge(label, value, icon) {
+    const badge = document.createElement('div');
+    badge.className = 'badge';
+
+    badge.innerHTML = `
+      <span class="badge-icon">${icon || '\uD83D\uDC37'}</span>
+      <div class="badge-content">
+        <span class="badge-label">${label}</span>
+        <span class="badge-value">${value}</span>
+      </div>
+    `;
+
+    return badge;
+  }
+
+  /**
+   * Create a form card with title, fields and submit button.
+   * @param {string} title - Form title
+   * @param {Array<object>} fields - [{name, label, placeholder, type}]
+   * @param {Function} onSubmit - Callback with form data object
+   * @returns {HTMLElement}
+   */
+  function createFormCard(title, fields, onSubmit) {
+    const card = document.createElement('div');
+    card.className = 'form-card';
+
+    const formTitle = document.createElement('h3');
+    formTitle.className = 'form-title';
+    formTitle.textContent = title;
+    card.appendChild(formTitle);
+
+    const form = document.createElement('form');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = {};
+      fields.forEach(f => {
+        data[f.name] = form.querySelector(`[name="${f.name}"]`).value;
+      });
+      onSubmit(data);
+      form.reset();
+    });
+
+    fields.forEach(f => {
+      const group = document.createElement('div');
+      group.className = 'form-group';
+
+      const label = document.createElement('label');
+      label.textContent = f.label;
+      label.setAttribute('for', 'field-' + f.name);
+      group.appendChild(label);
+
+      let input;
+      if (f.type === 'textarea') {
+        input = document.createElement('textarea');
+      } else {
+        input = document.createElement('input');
+        input.type = f.type || 'text';
+      }
+      input.className = 'form-control';
+      input.name = f.name;
+      input.id = 'field-' + f.name;
+      input.placeholder = f.placeholder || '';
+      if (f.required !== false) input.required = true;
+      group.appendChild(input);
+
+      form.appendChild(group);
+    });
+
+    const submitBtn = document.createElement('button');
+    submitBtn.type = 'submit';
+    submitBtn.className = 'btn btn-primary btn-full mt-md';
+    submitBtn.textContent = title.includes('Registrar') ? 'Anadir Gasto' : 'Anadir';
+    form.appendChild(submitBtn);
+
+    card.appendChild(form);
+    return card;
+  }
+
+  /**
+   * Create a confirmation modal dialog.
+   * @param {string} title - Modal title
+   * @param {string} message - Modal message
+   * @param {Function} onConfirm - Callback on confirm
+   * @param {Function} onCancel - Callback on cancel
+   * @returns {HTMLElement}
+   */
+  function createModal(title, message, onConfirm, onCancel) {
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+
+    overlay.innerHTML = `
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <h3 class="modal-title" id="modal-title">${title}</h3>
+        <p class="modal-body">${message}</p>
+        <div class="modal-actions">
+          <button class="btn btn-secondary modal-cancel">Cancelar</button>
+          <button class="btn btn-danger modal-confirm">Eliminar</button>
+        </div>
+      </div>
+    `;
+
+    overlay.querySelector('.modal-cancel').addEventListener('click', () => {
+      overlay.remove();
+      if (onCancel) onCancel();
+    });
+
+    overlay.querySelector('.modal-confirm').addEventListener('click', () => {
+      overlay.remove();
+      if (onConfirm) onConfirm();
+    });
+
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) {
+        overlay.remove();
+        if (onCancel) onCancel();
+      }
+    });
+
+    document.body.appendChild(overlay);
+    return overlay;
+  }
+
+  /**
+   * Show a toast notification.
+   * @param {string} message - The message to display
+   * @param {string} type - 'success' | 'error' | 'warning' | 'info'
+   */
+  function showToast(message, type = 'info') {
+    let container = document.querySelector('.toast-container');
+    if (!container) {
+      container = document.createElement('div');
+      container.className = 'toast-container';
+      container.setAttribute('aria-live', 'polite');
+      document.body.appendChild(container);
+    }
+
+    const icons = {
+      success: '\u2705',
+      error: '\u274C',
+      warning: '\u26A0\uFE0F',
+      info: '\u2139\uFE0F'
+    };
+
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.innerHTML = `
+      <span class="toast-icon">${icons[type] || icons.info}</span>
+      <span class="toast-message">${message}</span>
+      <button class="toast-close" aria-label="Cerrar">&times;</button>
+    `;
+
+    toast.querySelector('.toast-close').addEventListener('click', () => {
+      toast.classList.add('removing');
+      setTimeout(() => toast.remove(), 300);
+    });
+
+    container.appendChild(toast);
+
+    // Auto-remove after 4 seconds
+    setTimeout(() => {
+      if (toast.parentNode) {
+        toast.classList.add('removing');
+        setTimeout(() => toast.remove(), 300);
+      }
+    }, 4000);
+  }
+
+  /**
+   * Create a page header with title, icon and optional badges.
+   * @param {string} title - Page title
+   * @param {string} icon - Emoji icon
+   * @param {Array<HTMLElement>} badges - Array of badge elements
+   * @returns {HTMLElement}
+   */
+  function createPageHeader(title, icon, badges) {
+    const header = document.createElement('div');
+    header.className = 'page-header';
+
+    const titleEl = document.createElement('h1');
+    titleEl.className = 'page-title';
+    titleEl.textContent = (icon ? icon + ' ' : '') + title;
+    header.appendChild(titleEl);
+
+    if (badges && badges.length > 0) {
+      const badgeContainer = document.createElement('div');
+      badgeContainer.className = 'badge-container';
+      badges.forEach(b => badgeContainer.appendChild(b));
+      header.appendChild(badgeContainer);
+    }
+
+    return header;
+  }
+
+  return {
+    createTable,
+    createBadge,
+    createFormCard,
+    createModal,
+    showToast,
+    createPageHeader
+  };
+})();
+// sidebar.js - Barra de navegacion lateral. Renderiza links, usuario autenticado,
+// toggle hamburguesa y boton cerrar sesion.
+
+const SidebarModule = (() => {
+
+  const NAV_ITEMS = [
+    { label: 'Inicio', icon: '\uD83C\uDFE0', route: '#/' },
+    { label: 'Gastos Apartamento', icon: '\uD83C\uDFE2', route: '#/gastos-apartamento' },
+    { label: 'Gastos Obra', icon: '\uD83D\uDD27', route: '#/gastos-obra' },
+    { label: 'Mis Ahorros', icon: '\uD83D\uDCBC', route: '#/mis-ahorros' },
+    { label: 'N\u00f3mina', icon: '\uD83D\uDCB0', route: '#/nomina' }
+  ];
+
+  /**
+   * Render the sidebar into the given container element.
+   * @param {HTMLElement} container
+   */
+  function render(container) {
+    const sidebar = document.createElement('aside');
+    sidebar.className = 'sidebar';
+    sidebar.id = 'sidebar';
+
+    // Header
+    const header = document.createElement('div');
+    header.className = 'sidebar-header';
+    header.innerHTML = `
+      <div class="sidebar-title">\uD83D\uDCCA Finanzas</div>
+      <div class="card-subtitle" style="color: rgba(255,255,255,0.7); font-size: 0.75rem;">Control Personal</div>
+    `;
+    sidebar.appendChild(header);
+
+    // Navigation
+    const nav = document.createElement('nav');
+    nav.className = 'sidebar-nav';
+    nav.setAttribute('aria-label', 'Navegacion principal');
+
+    const currentHash = window.location.hash || '#/';
+
+    NAV_ITEMS.forEach(item => {
+      const a = document.createElement('a');
+      a.className = 'sidebar-nav-item' + (currentHash === item.route ? ' active' : '');
+      a.href = item.route;
+      a.innerHTML = `<span class="nav-icon">${item.icon}</span> ${item.label}`;
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        navigateTo(item.route);
+        closeMobileSidebar();
+      });
+      nav.appendChild(a);
+    });
+
+    sidebar.appendChild(nav);
+
+    // Footer with logout
+    const footer = document.createElement('div');
+    footer.className = 'sidebar-footer';
+
+    const logoutBtn = document.createElement('button');
+    logoutBtn.className = 'btn-logout';
+    logoutBtn.innerHTML = '\uD83D\uDEAA Cerrar Sesion';
+    logoutBtn.style.color = '#ff6b6b';
+    logoutBtn.addEventListener('click', async () => {
+      try {
+        await AuthModule.logout();
+        window.location.hash = '#/';
+        window.location.reload();
+      } catch (err) {
+        Components.showToast('Error al cerrar sesion', 'error');
+      }
+    });
+
+    footer.appendChild(logoutBtn);
+    sidebar.appendChild(footer);
+
+    container.appendChild(sidebar);
+
+    // Hamburger button for mobile
+    const hamburger = document.createElement('button');
+    hamburger.className = 'hamburger-btn';
+    hamburger.id = 'hamburger-btn';
+    hamburger.innerHTML = '\u2630';
+    hamburger.setAttribute('aria-label', 'Abrir menu');
+    hamburger.addEventListener('click', toggleMobileSidebar);
+    container.appendChild(hamburger);
+
+    // Overlay for mobile (hidden by default, shown only when sidebar opens on mobile)
+    const overlay = document.createElement('div');
+    overlay.className = 'sidebar-overlay';
+    overlay.id = 'sidebar-overlay';
+    overlay.style.display = 'none';
+    overlay.addEventListener('click', closeMobileSidebar);
+    container.appendChild(overlay);
+  }
+
+  /**
+   * Update the active state of nav items based on current hash.
+   */
+  function updateActiveState() {
+    const currentHash = window.location.hash || '#/';
+    const items = document.querySelectorAll('.sidebar-nav-item');
+    items.forEach(item => {
+      if (item.getAttribute('href') === currentHash) {
+        item.classList.add('active');
+      } else {
+        item.classList.remove('active');
+      }
+    });
+  }
+
+  function toggleMobileSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    if (sidebar) sidebar.classList.toggle('open');
+    if (overlay) overlay.classList.toggle('active');
+  }
+
+  function closeMobileSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    if (sidebar) sidebar.classList.remove('open');
+    if (overlay) overlay.classList.remove('active');
+  }
+
+  return {
+    render,
+    updateActiveState
+  };
+})();
+// dashboard.js - Modulo de Dashboard principal.
+// Muestra tarjetas de acceso rapido a los 4 modulos financieros.
+
+const DashboardModule = (() => {
+
+  const CARDS = [
+    { title: 'Gastos Apartamento', icon: '\uD83C\uDFE0', route: '#/gastos-apartamento', description: 'Control de gastos del hogar' },
+    { title: 'Gastos Obra', icon: '\uD83D\uDD27', route: '#/gastos-obra', description: 'Seguimiento de materiales y obra' },
+    { title: 'Mis Ahorros', icon: '\uD83D\uDCBC', route: '#/mis-ahorros', description: 'Distribucion de ahorros' },
+    { title: 'N\u00f3mina', icon: '\uD83D\uDCB0', route: '#/nomina', description: 'Presupuesto mensual' }
+  ];
+
+  /**
+   * Render the dashboard into the given container.
+   * @param {HTMLElement} container
+   */
+  function render(container) {
+    container.innerHTML = '';
+
+    // Welcome header
+    const welcome = document.createElement('div');
+    welcome.className = 'mb-xl';
+    welcome.innerHTML = `
+      <h1 class="page-title">\u00A1Bienvenido!</h1>
+      <p class="text-light mt-sm">Selecciona un modulo para gestionar tus finanzas</p>
+    `;
+    container.appendChild(welcome);
+
+    // Cards grid
+    const grid = document.createElement('div');
+    grid.className = 'dashboard-grid';
+
+    CARDS.forEach(cardData => {
+      const card = document.createElement('div');
+      card.className = 'card card-clickable';
+      card.setAttribute('role', 'link');
+      card.setAttribute('tabindex', '0');
+      card.setAttribute('aria-label', 'Ir a ' + cardData.title);
+
+      card.innerHTML = `
+        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">${cardData.icon}</div>
+        <h3 class="card-title">${cardData.title}</h3>
+        <p class="card-subtitle">${cardData.description}</p>
+        <span class="card-link">Ver Dashboard \u2192</span>
+      `;
+
+      card.addEventListener('click', () => navigateTo(cardData.route));
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          navigateTo(cardData.route);
+        }
+      });
+
+      grid.appendChild(card);
+    });
+
+    container.appendChild(grid);
+  }
+
+  return { render };
+})();
+// gastos-apartamento.js - Modulo de Gastos Apartamento.
+// Tabla CRUD con items, costos, observacion y total con exclusion.
+
+const GastosApartamentoModule = (() => {
+  let data = [];
+  let currentContainer = null;
+
+  /**
+   * Render the Gastos Apartamento module into the container.
+   * @param {HTMLElement} container
+   */
+  async function render(container) {
+    currentContainer = container;
+    container.innerHTML = '';
+
+    // Page header with badge
+    const totalBadge = Components.createBadge('TOTAL GASTO', maskValue('$ 0'), '\uD83D\uDC37');
+    totalBadge.id = 'total-badge-apartamento';
+    const header = Components.createPageHeader('Gastos Apartamento', '\uD83C\uDFE0', [totalBadge]);
+    container.appendChild(header);
+
+    // Module layout: table + form
+    const layout = document.createElement('div');
+    layout.className = 'module-layout';
+
+    // Table section
+    const tableSection = document.createElement('div');
+    tableSection.id = 'table-apartamento';
+    tableSection.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+    layout.appendChild(tableSection);
+
+    // Form section
+    const form = Components.createFormCard('Registrar Gasto', [
+      { name: 'item', label: 'Item', placeholder: '\u00BFQue compraste?', type: 'text' },
+      { name: 'costo', label: 'Costo', placeholder: 'Costo (Ej: 1500000)', type: 'number' },
+      { name: 'observacion', label: 'Observacion', placeholder: 'Observacion', type: 'text', required: false }
+    ], handleAdd);
+    layout.appendChild(form);
+
+    container.appendChild(layout);
+
+    // Load data
+    await loadData();
+  }
+
+  async function loadData() {
+    try {
+      const sheetName = SHEET_CONFIG['gastos-apartamento'].sheetName;
+      let sheetData = await CacheModule.getSheetData(sheetName);
+
+      if (!sheetData) {
+        sheetData = await GraphModule.readSheet(sheetName);
+        await CacheModule.saveSheetData(sheetName, sheetData);
+      }
+
+      data = (sheetData.values || []).filter(function(row) { return (row[0] || '').toString().trim() !== ''; });
+      renderTable();
+    } catch (err) {
+      // Try cache on error
+      const sheetName = SHEET_CONFIG['gastos-apartamento'].sheetName;
+      const cached = await CacheModule.getSheetData(sheetName);
+      if (cached) {
+        data = cached.values || [];
+        renderTable();
+        Components.showToast('Mostrando datos en cache (sin conexion)', 'warning');
+      } else {
+        const tableSection = document.getElementById('table-apartamento');
+        if (tableSection) tableSection.innerHTML = '<p class="text-light">Error al cargar datos. Verifica tu conexion.</p>';
+        Components.showToast('Error al cargar datos', 'error');
+      }
+    }
+  }
+
+  function renderTable() {
+    const tableSection = document.getElementById('table-apartamento');
+    if (!tableSection) return;
+    tableSection.innerHTML = '';
+
+    const headers = MODULE_COLUMNS['gastos-apartamento'].headers;
+    const rows = data.map(row => [row[0] || '', maskValue(formatCOP(Number(row[1]) || 0)), row[2] || '']);
+
+    const table = Components.createTable(headers, rows, {
+      onEdit: handleEdit,
+      onDelete: handleDelete
+    });
+
+    tableSection.appendChild(table);
+    updateTotal();
+  }
+
+  function updateTotal() {
+    let total = 0;
+    data.forEach(row => {
+      const item = (row[0] || '').toString().toLowerCase();
+      const obs = (row[2] || '').toString().toLowerCase();
+      if (!obs.includes('pendiente') && !item.includes('total')) {
+        total += Number(row[1]) || 0;
+      }
+    });
+
+    const badge = document.getElementById('total-badge-apartamento');
+    if (badge) {
+      const valueEl = badge.querySelector('.badge-value');
+      if (valueEl) valueEl.textContent = maskValue(formatCOP(total));
+    }
+  }
+
+  async function handleAdd(formData) {
+    const values = [formData.item, formData.costo, formData.observacion || ''];
+    data.push(values);
+    renderTable();
+
+    const sheetName = SHEET_CONFIG['gastos-apartamento'].sheetName;
+    await SyncModule.enqueue({
+      type: 'create',
+      module: 'gastos-apartamento',
+      sheetName: sheetName,
+      values: values
+    });
+    await CacheModule.saveSheetData(sheetName, { values: data, headers: SHEET_CONFIG['gastos-apartamento'].columns });
+    Components.showToast('Gasto agregado', 'success');
+  }
+
+  function handleEdit(rowIndex) {
+    const tableSection = document.getElementById('table-apartamento');
+    if (!tableSection) return;
+
+    const table = tableSection.querySelector('table');
+    if (!table) return;
+
+    const row = table.querySelectorAll('tbody tr')[rowIndex];
+    if (!row) return;
+
+    const currentData = data[rowIndex];
+    row.classList.add('editing');
+
+    const cells = row.querySelectorAll('td');
+    // Excluding actions cell (last one)
+    const fields = ['item', 'costo', 'observacion'];
+    for (let i = 0; i < 3; i++) {
+      const cell = cells[i];
+      const value = currentData[i] || '';
+      cell.innerHTML = `<input class="form-control" type="${i === 1 ? 'number' : 'text'}" value="${value}" data-field="${fields[i]}">`;
+    }
+
+    // Replace action buttons with save/cancel
+    const actionsCell = cells[3];
+    actionsCell.innerHTML = '';
+    const saveBtn = document.createElement('button');
+    saveBtn.className = 'btn-icon';
+    saveBtn.textContent = '\u2713';
+    saveBtn.title = 'Guardar';
+    saveBtn.addEventListener('click', () => saveEdit(rowIndex, row));
+
+    const cancelBtn = document.createElement('button');
+    cancelBtn.className = 'btn-icon';
+    cancelBtn.textContent = '\u2718';
+    cancelBtn.title = 'Cancelar';
+    cancelBtn.addEventListener('click', () => renderTable());
+
+    actionsCell.appendChild(saveBtn);
+    actionsCell.appendChild(cancelBtn);
+  }
+
+  async function saveEdit(rowIndex, row) {
+    const inputs = row.querySelectorAll('input');
+    const newValues = [inputs[0].value, inputs[1].value, inputs[2].value];
+
+    data[rowIndex] = newValues;
+    renderTable();
+
+    const sheetName = SHEET_CONFIG['gastos-apartamento'].sheetName;
+    await SyncModule.enqueue({
+      type: 'update',
+      module: 'gastos-apartamento',
+      sheetName: sheetName,
+      rowIndex: rowIndex + 1,
+      values: newValues
+    });
+    await CacheModule.saveSheetData(sheetName, { values: data, headers: SHEET_CONFIG['gastos-apartamento'].columns });
+    Components.showToast('Gasto actualizado', 'success');
+  }
+
+  function handleDelete(rowIndex) {
+    Components.createModal(
+      'Eliminar Gasto',
+      '\u00BFEstas seguro de que deseas eliminar este gasto?',
+      async () => {
+        const sheetName = SHEET_CONFIG['gastos-apartamento'].sheetName;
+        data.splice(rowIndex, 1);
+        renderTable();
+
+        await SyncModule.enqueue({
+          type: 'delete',
+          module: 'gastos-apartamento',
+          sheetName: sheetName,
+          rowIndex: rowIndex + 1
+        });
+        await CacheModule.saveSheetData(sheetName, { values: data, headers: SHEET_CONFIG['gastos-apartamento'].columns });
+        Components.showToast('Gasto eliminado', 'success');
+      }
+    );
+  }
+
+  return { render };
+})();
+// gastos-obra.js - Modulo de Gastos Obra.
+// Tabla CRUD con materiales, costos, observacion. Total suma todos los costos.
+
+const GastosObraModule = (() => {
+  let data = [];
+  let currentContainer = null;
+
+  /**
+   * Render the Gastos Obra module into the container.
+   * @param {HTMLElement} container
+   */
+  async function render(container) {
+    currentContainer = container;
+    container.innerHTML = '';
+
+    // Page header with badge
+    const totalBadge = Components.createBadge('TOTAL GASTO', maskValue('$ 0'), '\uD83D\uDC37');
+    totalBadge.id = 'total-badge-obra';
+    const header = Components.createPageHeader('Gastos Obra', '\uD83D\uDD27', [totalBadge]);
+    container.appendChild(header);
+
+    // Module layout: table + form
+    const layout = document.createElement('div');
+    layout.className = 'module-layout';
+
+    // Table section
+    const tableSection = document.createElement('div');
+    tableSection.id = 'table-obra';
+    tableSection.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+    layout.appendChild(tableSection);
+
+    // Form section
+    const form = Components.createFormCard('Registrar Gasto', [
+      { name: 'material', label: 'Material', placeholder: '\u00BFQue material compraste?', type: 'text' },
+      { name: 'costo', label: 'Costo', placeholder: 'Costo (Ej: 1500000)', type: 'number' },
+      { name: 'observacion', label: 'Observacion', placeholder: 'Observacion', type: 'text', required: false }
+    ], handleAdd);
+    layout.appendChild(form);
+
+    container.appendChild(layout);
+
+    await loadData();
+  }
+
+  async function loadData() {
+    try {
+      const sheetName = SHEET_CONFIG['gastos-obra'].sheetName;
+      let sheetData = await CacheModule.getSheetData(sheetName);
+
+      if (!sheetData) {
+        sheetData = await GraphModule.readSheet(sheetName);
+        await CacheModule.saveSheetData(sheetName, sheetData);
+      }
+
+      data = (sheetData.values || []).filter(function(row) { return (row[0] || '').toString().trim() !== ''; });
+      renderTable();
+    } catch (err) {
+      const sheetName = SHEET_CONFIG['gastos-obra'].sheetName;
+      const cached = await CacheModule.getSheetData(sheetName);
+      if (cached) {
+        data = cached.values || [];
+        renderTable();
+        Components.showToast('Mostrando datos en cache (sin conexion)', 'warning');
+      } else {
+        const tableSection = document.getElementById('table-obra');
+        if (tableSection) tableSection.innerHTML = '<p class="text-light">Error al cargar datos.</p>';
+        Components.showToast('Error al cargar datos', 'error');
+      }
+    }
+  }
+
+  function renderTable() {
+    const tableSection = document.getElementById('table-obra');
+    if (!tableSection) return;
+    tableSection.innerHTML = '';
+
+    const headers = MODULE_COLUMNS['gastos-obra'].headers;
+    const rows = data.map(row => [row[0] || '', maskValue(formatCOP(Number(row[1]) || 0)), row[2] || '']);
+
+    const table = Components.createTable(headers, rows, {
+      onEdit: handleEdit,
+      onDelete: handleDelete
+    });
+
+    tableSection.appendChild(table);
+    updateTotal();
+  }
+
+  function updateTotal() {
+    let total = 0;
+    data.forEach(row => {
+      const mat = (row[0] || '').toString().toLowerCase(); const obs = (row[2] || '').toString().toLowerCase(); if (!mat.includes('total') && !obs.includes('total')) { total += Number(row[1]) || 0; }
+    });
+
+    const badge = document.getElementById('total-badge-obra');
+    if (badge) {
+      const valueEl = badge.querySelector('.badge-value');
+      if (valueEl) valueEl.textContent = maskValue(formatCOP(total));
+    }
+  }
+
+  async function handleAdd(formData) {
+    const values = [formData.material, formData.costo, formData.observacion || ''];
+    data.push(values);
+    renderTable();
+
+    const sheetName = SHEET_CONFIG['gastos-obra'].sheetName;
+    await SyncModule.enqueue({
+      type: 'create',
+      module: 'gastos-obra',
+      sheetName: sheetName,
+      values: values
+    });
+    await CacheModule.saveSheetData(sheetName, { values: data, headers: SHEET_CONFIG['gastos-obra'].columns });
+    Components.showToast('Gasto agregado', 'success');
+  }
+
+  function handleEdit(rowIndex) {
+    const tableSection = document.getElementById('table-obra');
+    if (!tableSection) return;
+
+    const table = tableSection.querySelector('table');
+    if (!table) return;
+
+    const row = table.querySelectorAll('tbody tr')[rowIndex];
+    if (!row) return;
+
+    const currentData = data[rowIndex];
+    row.classList.add('editing');
+
+    const cells = row.querySelectorAll('td');
+    const fields = ['material', 'costo', 'observacion'];
+    for (let i = 0; i < 3; i++) {
+      const cell = cells[i];
+      const value = currentData[i] || '';
+      cell.innerHTML = `<input class="form-control" type="${i === 1 ? 'number' : 'text'}" value="${value}" data-field="${fields[i]}">`;
+    }
+
+    const actionsCell = cells[3];
+    actionsCell.innerHTML = '';
+    const saveBtn = document.createElement('button');
+    saveBtn.className = 'btn-icon';
+    saveBtn.textContent = '\u2713';
+    saveBtn.title = 'Guardar';
+    saveBtn.addEventListener('click', () => saveEdit(rowIndex, row));
+
+    const cancelBtn = document.createElement('button');
+    cancelBtn.className = 'btn-icon';
+    cancelBtn.textContent = '\u2718';
+    cancelBtn.title = 'Cancelar';
+    cancelBtn.addEventListener('click', () => renderTable());
+
+    actionsCell.appendChild(saveBtn);
+    actionsCell.appendChild(cancelBtn);
+  }
+
+  async function saveEdit(rowIndex, row) {
+    const inputs = row.querySelectorAll('input');
+    const newValues = [inputs[0].value, inputs[1].value, inputs[2].value];
+
+    data[rowIndex] = newValues;
+    renderTable();
+
+    const sheetName = SHEET_CONFIG['gastos-obra'].sheetName;
+    await SyncModule.enqueue({
+      type: 'update',
+      module: 'gastos-obra',
+      sheetName: sheetName,
+      rowIndex: rowIndex + 1,
+      values: newValues
+    });
+    await CacheModule.saveSheetData(sheetName, { values: data, headers: SHEET_CONFIG['gastos-obra'].columns });
+    Components.showToast('Gasto actualizado', 'success');
+  }
+
+  function handleDelete(rowIndex) {
+    Components.createModal(
+      'Eliminar Gasto',
+      '\u00BFEstas seguro de que deseas eliminar este gasto?',
+      async () => {
+        const sheetName = SHEET_CONFIG['gastos-obra'].sheetName;
+        data.splice(rowIndex, 1);
+        renderTable();
+
+        await SyncModule.enqueue({
+          type: 'delete',
+          module: 'gastos-obra',
+          sheetName: sheetName,
+          rowIndex: rowIndex + 1
+        });
+        await CacheModule.saveSheetData(sheetName, { values: data, headers: SHEET_CONFIG['gastos-obra'].columns });
+        Components.showToast('Gasto eliminado', 'success');
+      }
+    );
+  }
+
+  return { render };
+})();
+// mis-ahorros.js - Modulo de Mis Ahorros.
+// Columnas fijas: Rubro, Total(auto), Efectivo, CDT, Cuenta, Interes CDT, Bco Santander, Daviv Bolsillo, Dollar App
+// Columnas dinamicas: cualquier columna extra agregada via campo "Otros" (se inserta antes de Vencimiento)
+// Columna Vencimiento siempre al final.
+// TOTAL = suma de todas las columnas numericas (fijas + dinamicas).
+
+const MisAhorrosModule = (() => {
+  let data = [];
+  let currentContainer = null;
+
+  const FIXED_NUMERIC_START = 2;
+  const FIXED_NUMERIC_END = 8;
+  const FIXED_COLS = ['Rubro', 'Total', 'Efectivo', 'CDT', 'Cuenta', 'Interes CDT', 'Bco Santander', 'Daviv Bolsillo', 'Dollar App'];
+  const STORAGE_KEY = 'mis_ahorros_extra_cols';
+
+  function getExtraCols() {
+    try {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    } catch(e) { return []; }
+  }
+  function saveExtraCols(cols) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(cols));
+  }
+
+  function colVencimiento() {
+    return 9 + getExtraCols().length;
+  }
+
+  function numericColEnd() {
+    return 8 + getExtraCols().length;
+  }
+
+  function calcTotal(row) {
+    let sum = 0;
+    const end = numericColEnd();
+    for (let i = FIXED_NUMERIC_START; i <= end; i++) {
+      let v = row[i];
+      if (typeof v === 'string') v = parseCOP(v);
+      sum += Number(v) || 0;
+    }
+    return sum;
+  }
+
+  function parseDate(str) {
+    if (!str || typeof str !== 'string') return null;
+    str = str.trim();
+    const dmyMatch = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    if (dmyMatch) return new Date(parseInt(dmyMatch[3]), parseInt(dmyMatch[2]) - 1, parseInt(dmyMatch[1]));
+    const ymdMatch = str.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (ymdMatch) return new Date(parseInt(ymdMatch[1]), parseInt(ymdMatch[2]) - 1, parseInt(ymdMatch[3]));
+    return null;
+  }
+
+  function daysUntil(dateObj) {
+    if (!dateObj) return null;
+    const today = new Date(); today.setHours(0,0,0,0);
+    const target = new Date(dateObj); target.setHours(0,0,0,0);
+    return Math.round((target - today) / (1000 * 60 * 60 * 24));
+  }
+
+  async function sendVencimientoEmail(rubro, fechaStr, diasFaltantes) {
+    try {
+      const token = await AuthModule.getToken(['Mail.Send']);
+      const subject = diasFaltantes === 0 ? 'Vencimiento HOY: ' + rubro : 'Vencimiento en ' + diasFaltantes + ' dia(s): ' + rubro;
+      const body = 'Tienes un vencimiento proximamente:\n\nRubro: ' + rubro + '\nFecha: ' + fechaStr + '\n' + (diasFaltantes === 0 ? 'Vence HOY.' : 'Faltan ' + diasFaltantes + ' dia(s).');
+      await fetch('https://graph.microsoft.com/v1.0/me/sendMail', {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: { subject, body: { contentType: 'Text', content: body }, toRecipients: [{ emailAddress: { address: 'taticacorts@hotmail.com' } }] }, saveToSentItems: false })
+      });
+    } catch (err) { console.warn('Email vencimiento error:', err); }
+  }
+
+  async function checkVencimientos() {
+    const today = new Date(); today.setHours(0,0,0,0);
+    const todayKey = today.toISOString().split('T')[0];
+    const vencCol = colVencimiento();
+    for (const row of data) {
+      const rubro = (row[0] || '').toString().trim();
+      const fechaStr = (row[vencCol] || '').toString().trim();
+      if (!fechaStr) continue;
+      const dias = daysUntil(parseDate(fechaStr));
+      if (dias === null || dias < 0 || dias > 2) continue;
+      const emailKey = 'venc_sent_' + rubro.replace(/\s/g, '_') + '_' + todayKey;
+      if (localStorage.getItem(emailKey)) continue;
+      await sendVencimientoEmail(rubro, fechaStr, dias);
+      localStorage.setItem(emailKey, '1');
+    }
+  }
+
+  function buildForm(container) {
+    const extraCols = getExtraCols();
+    const oldForm = container.querySelector('.form-card');
+    if (oldForm) oldForm.remove();
+    const fields = [
+      { name: 'rubro', label: 'Rubro', placeholder: 'Nombre del rubro', type: 'text' },
+      { name: 'efectivo', label: 'Efectivo', placeholder: '0', type: 'number', required: false },
+      { name: 'cdt', label: 'CDT', placeholder: '0', type: 'number', required: false },
+      { name: 'cuenta', label: 'Cuenta', placeholder: '0', type: 'number', required: false },
+      { name: 'interesCdt', label: 'Interes CDT', placeholder: '0', type: 'number', required: false },
+      { name: 'bcoSantander', label: 'Bco Santander', placeholder: '0', type: 'number', required: false },
+      { name: 'davivBolsillo', label: 'Daviv Bolsillo', placeholder: '0', type: 'number', required: false },
+      { name: 'dollarApp', label: 'Dollar App', placeholder: '0', type: 'number', required: false },
+      { name: 'otrosNombre', label: 'Otro (nombre)', placeholder: 'Nueva columna', type: 'text', required: false },
+      { name: 'otrosValor', label: 'Otro (valor)', placeholder: '0', type: 'number', required: false },
+      { name: 'vencimiento', label: 'Vencimiento', placeholder: 'DD/MM/AAAA', type: 'text', required: false }
+    ];
+
+    // Compact card form
+    const card = document.createElement('div');
+    card.className = 'form-card';
+    card.style.cssText = 'padding:var(--spacing-md);margin-top:var(--spacing-md);';
+    const title = document.createElement('h3');
+    title.className = 'form-title';
+    title.style.cssText = 'font-size:0.9rem;margin-bottom:var(--spacing-sm);';
+    title.textContent = '+ Agregar Rubro';
+    card.appendChild(title);
+
+    const form = document.createElement('form');
+    form.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill, minmax(120px, 1fr));gap:8px;align-items:end;';
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = {};
+      fields.forEach(f => { data[f.name] = form.querySelector('[name=' + f.name + ']').value; });
+      handleAdd(data);
+      form.reset();
+    });
+
+    fields.forEach(f => {
+      const group = document.createElement('div');
+      const label = document.createElement('label');
+      label.textContent = f.label;
+      label.style.cssText = 'display:block;font-size:0.7rem;color:var(--color-text-light);margin-bottom:2px;';
+      label.setAttribute('for', 'add-' + f.name);
+      group.appendChild(label);
+      const input = document.createElement('input');
+      input.type = f.type || 'text';
+      input.className = 'form-control';
+      input.style.cssText = 'padding:4px 8px;font-size:0.8rem;';
+      input.name = f.name;
+      input.id = 'add-' + f.name;
+      input.placeholder = f.placeholder || '';
+      if (f.required !== false) input.required = true;
+      group.appendChild(input);
+      form.appendChild(group);
+    });
+
+    const btnGroup = document.createElement('div');
+    btnGroup.style.cssText = 'display:flex;align-items:end;';
+    const btn = document.createElement('button');
+    btn.type = 'submit';
+    btn.className = 'btn btn-primary';
+    btn.style.cssText = 'padding:6px 12px;font-size:0.8rem;white-space:nowrap;';
+    btn.textContent = 'Agregar';
+    btnGroup.appendChild(btn);
+    form.appendChild(btnGroup);
+
+    card.appendChild(form);
+
+    // Extra columns management - delete buttons
+    if (extraCols.length > 0) {
+      const colMgmt = document.createElement('div');
+      colMgmt.style.cssText = 'margin-top:8px;padding:8px;border-top:1px solid var(--color-border);';
+      const colTitle = document.createElement('span');
+      colTitle.style.cssText = 'font-size:0.7rem;color:var(--color-text-light);';
+      colTitle.textContent = 'Columnas extra: ';
+      colMgmt.appendChild(colTitle);
+      extraCols.forEach((col, idx) => {
+        const tag = document.createElement('span');
+        tag.style.cssText = 'display:inline-flex;align-items:center;gap:4px;background:var(--color-primary-light);border-radius:12px;padding:2px 8px;margin:2px;font-size:0.7rem;';
+        tag.textContent = col + ' ';
+        const delCol = document.createElement('button');
+        delCol.type = 'button';
+        delCol.style.cssText = 'background:none;border:none;color:var(--color-danger);cursor:pointer;font-size:0.8rem;padding:0;';
+        delCol.textContent = String.fromCodePoint(0x2715);
+        delCol.onclick = function() {
+          const cols = getExtraCols();
+          cols.splice(idx, 1);
+          saveExtraCols(cols);
+          // Remove column data from each row
+          const vencOld = 9 + cols.length + 1;
+          data.forEach(row => { if (row.length > 9 + idx) row.splice(9 + idx, 1); });
+          renderTable();
+          if (currentContainer) buildForm(currentContainer);
+          const sheetName = SHEET_CONFIG['mis-ahorros'].sheetName;
+          CacheModule.saveSheetData(sheetName, { values: data, headers: SHEET_CONFIG['mis-ahorros'].columns });
+          Components.showToast('Columna eliminada', 'success');
+        };
+        tag.appendChild(delCol);
+        colMgmt.appendChild(tag);
+      });
+      card.appendChild(colMgmt);
+    }
+
+    container.appendChild(card);
+  }
+
+  async function render(container) {
+    currentContainer = container;
+    container.innerHTML = '';
+    const totalBadge = Components.createBadge('TOTAL AHORROS', '$ 0', '\uD83D\uDCBC');
+    totalBadge.id = 'total-badge-ahorros';
+    const header = Components.createPageHeader('Mis Ahorros', '\uD83D\uDCBC', [totalBadge]);
+    container.appendChild(header);
+    const infoCards = document.createElement('div');
+    infoCards.className = 'info-cards';
+    infoCards.innerHTML = `
+      <div class="info-card"><div class="info-card-label">Numero de Cuenta</div><div class="info-card-value">472970073731</div></div>
+      <div class="info-card"><div class="info-card-label">Encargo Fiduciario</div><div class="info-card-value">602488400025341</div></div>
+    `;
+    container.appendChild(infoCards);
+    const tableSection = document.createElement('div');
+    tableSection.id = 'table-ahorros';
+    tableSection.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+    container.appendChild(tableSection);
+    buildForm(container);
+    await loadData();
+  }
+
+  async function loadData() {
+    try {
+      const sheetName = SHEET_CONFIG['mis-ahorros'].sheetName;
+      let sheetData = await CacheModule.getSheetData(sheetName);
+      if (!sheetData) {
+        sheetData = await GraphModule.readSheet(sheetName);
+        await CacheModule.saveSheetData(sheetName, sheetData);
+      }
+      data = (sheetData.values || []).filter(row => (row[0] || '').toString().trim() !== '');
+      renderTable();
+      checkVencimientos().catch(err => console.warn('checkVencimientos:', err));
+    } catch (err) {
+      const sheetName = SHEET_CONFIG['mis-ahorros'].sheetName;
+      const cached = await CacheModule.getSheetData(sheetName);
+      if (cached) {
+        data = cached.values || [];
+        renderTable();
+        Components.showToast('Mostrando datos en cache', 'warning');
+        checkVencimientos().catch(() => {});
+      } else {
+        const ts = document.getElementById('table-ahorros');
+        if (ts) ts.innerHTML = '<p class="text-light">Error al cargar datos.</p>';
+        Components.showToast('Error al cargar datos', 'error');
+      }
+    }
+  }
+
+  function renderTable() {
+    const tableSection = document.getElementById('table-ahorros');
+    if (!tableSection) return;
+    tableSection.innerHTML = '';
+    const extraCols = getExtraCols();
+    const vencCol = colVencimiento();
+
+    // Column labels
+    const colLabels = ['Efectivo', 'CDT', 'Cuenta', 'Int.CDT', 'BcoSant.', 'Daviv', 'Dollar'];
+    extraCols.forEach(c => colLabels.push(c));
+    const barColors = ['#4CAF50','#2196F3','#9C27B0','#FF9800','#00BCD4','#E91E63','#607D8B','#795548','#CDDC39'];
+
+    // Summary totals
+    const totals = new Array(colLabels.length).fill(0);
+    let grandTotal = 0;
+    data.forEach(row => {
+      const t = calcTotal(row);
+      grandTotal += t;
+      for (let i = FIXED_NUMERIC_START; i < vencCol; i++) { totals[i - FIXED_NUMERIC_START] += Number(row[i]) || 0; }
+    });
+
+    // Summary bar
+    const summary = document.createElement('div');
+    summary.className = 'savings-summary';
+    const gtItem = document.createElement('div'); gtItem.className = 'savings-summary-item';
+    gtItem.innerHTML = '<div class="ssl">TOTAL GENERAL</div><div class="ssv">' + maskValue(formatCOP(grandTotal)) + '</div>';
+    summary.appendChild(gtItem);
+    colLabels.forEach((label, idx) => {
+      if (totals[idx] > 0) {
+        const item = document.createElement('div'); item.className = 'savings-summary-item';
+        item.innerHTML = '<div class="ssl">' + label + '</div><div class="ssv">' + maskValue(formatCOP(totals[idx])) + '</div>';
+        summary.appendChild(item);
+      }
+    });
+    tableSection.appendChild(summary);
+
+    // Cards container
+    const cardsDiv = document.createElement('div');
+    cardsDiv.className = 'savings-cards';
+
+    data.forEach((row, rowIdx) => {
+      const rubro = row[0] || '';
+      const total = calcTotal(row);
+      const card = document.createElement('div');
+      card.className = 'savings-card';
+
+      // Header
+      const header = document.createElement('div');
+      header.className = 'savings-card-header';
+      const name = document.createElement('span'); name.className = 'savings-card-name'; name.textContent = rubro;
+      const totalEl = document.createElement('span'); totalEl.className = 'savings-card-total'; totalEl.textContent = maskValue(formatCOP(total));
+      const actions = document.createElement('div'); actions.className = 'savings-card-actions';
+      const editBtn = document.createElement('button'); editBtn.className = 'btn-icon btn-icon-edit'; editBtn.textContent = String.fromCodePoint(0x270F, 0xFE0F);
+      editBtn.onclick = function(e) { e.stopPropagation(); handleEdit(rowIdx); };
+      const delBtn = document.createElement('button'); delBtn.className = 'btn-icon btn-icon-danger'; delBtn.textContent = String.fromCodePoint(0x1F5D1, 0xFE0F);
+      delBtn.onclick = function(e) { e.stopPropagation(); handleDelete(rowIdx); };
+      actions.appendChild(editBtn); actions.appendChild(delBtn);
+      header.appendChild(name); header.appendChild(totalEl); header.appendChild(actions);
+      card.appendChild(header);
+
+      // Distribution bar
+      if (total > 0) {
+        const bar = document.createElement('div'); bar.className = 'savings-card-bar';
+        for (let i = FIXED_NUMERIC_START; i < vencCol; i++) {
+          const v = Number(row[i]) || 0;
+          if (v > 0) {
+            const seg = document.createElement('span');
+            seg.style.width = Math.round((v / total) * 100) + '%';
+            seg.style.background = barColors[i - FIXED_NUMERIC_START] || '#999';
+            seg.title = colLabels[i - FIXED_NUMERIC_START] + ': ' + formatCOP(v);
+            bar.appendChild(seg);
+          }
+        }
+        card.appendChild(bar);
+      }
+
+      // Vencimiento indicator
+      const fechaStr = (row[vencCol] || '').toString().trim();
+      if (fechaStr) {
+        const vencDiv = document.createElement('div');
+        const d = parseDate(fechaStr);
+        let dias = d ? daysUntil(d) : null;
+        vencDiv.className = 'savings-card-venc';
+        if (dias !== null) {
+          if (dias <= 0) { vencDiv.classList.add('venc-danger'); vencDiv.textContent = String.fromCodePoint(0x1F534) + ' Vencido: ' + fechaStr; }
+          else if (dias <= 7) { vencDiv.classList.add('venc-danger'); vencDiv.textContent = String.fromCodePoint(0x1F534) + ' ' + dias + ' dia(s) - ' + fechaStr; }
+          else if (dias <= 30) { vencDiv.classList.add('venc-warn'); vencDiv.textContent = String.fromCodePoint(0x1F7E1) + ' ' + dias + ' dias - ' + fechaStr; }
+          else { vencDiv.classList.add('venc-ok'); vencDiv.textContent = String.fromCodePoint(0x1F7E2) + ' ' + dias + ' dias - ' + fechaStr; }
+        } else { vencDiv.textContent = fechaStr; }
+        card.appendChild(vencDiv);
+      }
+
+      // Expandible detail
+      const detail = document.createElement('div');
+      detail.className = 'savings-card-detail';
+      for (let i = FIXED_NUMERIC_START; i < vencCol; i++) {
+        const item = document.createElement('div'); item.className = 'savings-detail-item';
+        item.innerHTML = '<div class="sdl">' + colLabels[i - FIXED_NUMERIC_START] + '</div><div class="sdv">' + maskValue(formatCOP(Number(row[i]) || 0)) + '</div>';
+        detail.appendChild(item);
+      }
+      card.appendChild(detail);
+
+      // Toggle expand
+      card.onclick = function() { card.classList.toggle('expanded'); };
+      cardsDiv.appendChild(card);
+    });
+
+    tableSection.appendChild(cardsDiv);
+    updateTotal(grandTotal);
+  }
+
+  function updateTotal(total) {
+    const badge = document.getElementById('total-badge-ahorros');
+    if (badge) {
+      const valueEl = badge.querySelector('.badge-value');
+      if (valueEl) valueEl.textContent = maskValue(formatCOP(total || 0));
+    }
+  }
+
+  async function handleAdd(formData) {
+    const extraCols = getExtraCols();
+    const vencCol = colVencimiento();
+    const otrosNombre = (formData.otrosNombre || '').trim();
+    let otrosIdx = -1;
+    if (otrosNombre) {
+      if (!extraCols.includes(otrosNombre)) {
+        extraCols.push(otrosNombre);
+        saveExtraCols(extraCols);
+      }
+      otrosIdx = extraCols.indexOf(otrosNombre);
+    }
+    const newVencCol = 9 + extraCols.length;
+    const ef = Number(formData.efectivo) || 0;
+    const cdt = Number(formData.cdt) || 0;
+    const cu = Number(formData.cuenta) || 0;
+    const ic = Number(formData.interesCdt) || 0;
+    const bs = Number(formData.bcoSantander) || 0;
+    const db = Number(formData.davivBolsillo) || 0;
+    const da = Number(formData.dollarApp) || 0;
+    const extraVals = extraCols.map((col, idx) => {
+      if (otrosNombre && idx === otrosIdx) {
+        return String(Number(formData.otrosValor) || 0);
+      }
+      return '0';
+    });
+    const total = ef + cdt + cu + ic + bs + db + da + extraVals.reduce((s, v) => s + (Number(v) || 0), 0);
+    const values = [formData.rubro, String(total), String(ef), String(cdt), String(cu), String(ic), String(bs), String(db), String(da), ...extraVals, formData.vencimiento || ''];
+    data.push(values);
+    if (currentContainer) buildForm(currentContainer);
+    renderTable();
+    const sheetName = SHEET_CONFIG['mis-ahorros'].sheetName;
+    await SyncModule.enqueue({ type: 'create', module: 'mis-ahorros', sheetName, values });
+    await CacheModule.saveSheetData(sheetName, { values: data, headers: SHEET_CONFIG['mis-ahorros'].columns });
+    Components.showToast('Rubro agregado', 'success');
+  }
+
+  function handleEdit(rowIndex) {
+    const tableSection = document.getElementById('table-ahorros');
+    if (!tableSection) return;
+    const table = tableSection.querySelector('table');
+    if (!table) return;
+    const tr = table.querySelectorAll('tbody tr')[rowIndex];
+    if (!tr) return;
+    const extraCols = getExtraCols();
+    const vencCol = colVencimiento();
+    const currentData = data[rowIndex];
+    tr.classList.add('editing');
+    const cells = tr.querySelectorAll('td');
+    // Actions cell (0) - replace with save/cancel
+    const actionsCell = cells[0];
+    actionsCell.innerHTML = '';
+    const saveBtn = document.createElement('button'); saveBtn.className = 'btn-icon'; saveBtn.textContent = '\u2713'; saveBtn.title = 'Guardar';
+    saveBtn.addEventListener('click', () => saveEdit(rowIndex, tr));
+    const cancelBtn = document.createElement('button'); cancelBtn.className = 'btn-icon'; cancelBtn.textContent = '\u2718'; cancelBtn.title = 'Cancelar';
+    cancelBtn.addEventListener('click', () => renderTable());
+    actionsCell.appendChild(saveBtn);
+    actionsCell.appendChild(cancelBtn);
+    // Rubro cell (1)
+    cells[1].innerHTML = '<input class="form-control" type="text" value="' + (currentData[0] || '') + '">';
+    // Total cell (2) - readonly
+    // Numeric cells (3 onwards)
+    for (let i = FIXED_NUMERIC_START; i < vencCol; i++) {
+      const raw = currentData[i];
+      cells[i + 1].innerHTML = '<input class="form-control" type="number" value="' + (Number(raw) || 0) + '">';
+    }
+    // Vencimiento
+    cells[vencCol + 1].innerHTML = '<input class="form-control" type="text" value="' + (currentData[vencCol] || '') + '" placeholder="DD/MM/AAAA">';
+  }
+
+  async function saveEdit(rowIndex, tr) {
+    const extraCols = getExtraCols();
+    const vencCol = colVencimiento();
+    const inputs = tr.querySelectorAll('input');
+    const rubro = inputs[0].value;
+    const numericCount = vencCol - FIXED_NUMERIC_START;
+    const numericVals = [];
+    for (let k = 0; k < numericCount; k++) {
+      numericVals.push(Number(inputs[1 + k].value) || 0);
+    }
+    const vencimiento = inputs[1 + numericCount] ? inputs[1 + numericCount].value : '';
+    const total = numericVals.reduce((s, v) => s + v, 0);
+    const newValues = [rubro, String(total), ...numericVals.map(v => String(v)), vencimiento];
+    data[rowIndex] = newValues;
+    renderTable();
+    const sheetName = SHEET_CONFIG['mis-ahorros'].sheetName;
+    await SyncModule.enqueue({ type: 'update', module: 'mis-ahorros', sheetName, rowIndex: rowIndex + 1, values: newValues });
+    await CacheModule.saveSheetData(sheetName, { values: data, headers: SHEET_CONFIG['mis-ahorros'].columns });
+    Components.showToast('Rubro actualizado', 'success');
+  }
+
+  function handleDelete(rowIndex) {
+    Components.createModal(
+      'Eliminar Rubro',
+      '\u00BFEstas seguro de que deseas eliminar este rubro?',
+      async () => {
+        const sheetName = SHEET_CONFIG['mis-ahorros'].sheetName;
+        data.splice(rowIndex, 1);
+        renderTable();
+        await SyncModule.enqueue({ type: 'delete', module: 'mis-ahorros', sheetName, rowIndex: rowIndex + 1 });
+        await CacheModule.saveSheetData(sheetName, { values: data, headers: SHEET_CONFIG['mis-ahorros'].columns });
+        Components.showToast('Rubro eliminado', 'success');
+      }
+    );
+  }
+
+  return { render };
+})();
+
+const NominaModule = (() => {
+  let selectedMonth = null;
+  let monthData = [];
+  let currentContainer = null;
+
+  /**
+   * Render the Nomina module into the container.
+   * @param {HTMLElement} container
+   */
+  async function render(container) {
+    currentContainer = container;
+    container.innerHTML = '';
+
+    // Page header
+    const header = Components.createPageHeader('N\u00f3mina', '\uD83D\uDCB0', []);
+    container.appendChild(header);
+
+    // Month grid
+    const grid = document.createElement('div');
+    grid.className = 'month-grid';
+    grid.id = 'month-grid';
+
+    const currentMonth = new Date().getMonth();
+
+    MONTHS.forEach((month, idx) => {
+      const card = document.createElement('div');
+      card.className = 'month-card' + (idx === currentMonth ? ' current' : '');
+      card.dataset.month = idx;
+      card.innerHTML = `
+        <div class="month-icon">${month.icon}</div>
+        <div class="month-name">${month.name}</div>
+        ${idx === currentMonth ? '<span class="month-badge">Actual</span>' : ''}
+      `;
+      card.addEventListener('click', () => selectMonth(idx));
+      grid.appendChild(card);
+    });
+
+    container.appendChild(grid);
+
+    // Detail section (hidden initially)
+    const detail = document.createElement('div');
+    detail.id = 'nomina-detail';
+    detail.style.display = 'none';
+    container.appendChild(detail);
+
+    // Auto-select current month
+    selectMonth(currentMonth);
+  }
+
+  async function selectMonth(monthIndex) {
+    selectedMonth = monthIndex;
+
+    // Update active state in grid
+    const cards = document.querySelectorAll('.month-card');
+    cards.forEach((card, idx) => {
+      card.classList.toggle('active', idx === monthIndex);
+    });
+
+    // Show detail section
+    const detail = document.getElementById('nomina-detail');
+    if (!detail) return;
+    detail.style.display = 'block';
+    detail.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+
+    await loadMonthData(monthIndex);
+  }
+
+  async function loadMonthData(monthIndex) {
+    try {
+      const sheetName = SHEET_CONFIG['nomina'].getSheetName(monthIndex); if (!sheetName) { monthData = []; renderMonthDetail(monthIndex); return; }
+      let sheetData = await CacheModule.getSheetData(sheetName);
+
+      if (!sheetData) {
+        sheetData = await GraphModule.readSheet(sheetName);
+        await CacheModule.saveSheetData(sheetName, sheetData);
+      }
+
+      monthData = (sheetData.values || []).map(r => SHEET_CONFIG['nomina'].mapRow(r, monthIndex)).filter(function(r){ return (r[0]||'').toString().trim() !== '' || Number(r[1]) || Number(r[2]); });
+      renderMonthDetail(monthIndex);
+    } catch (err) {
+      const sheetName = SHEET_CONFIG['nomina'].getSheetName(monthIndex); if (!sheetName) { monthData = []; renderMonthDetail(monthIndex); return; }
+      const cached = await CacheModule.getSheetData(sheetName);
+      if (cached) {
+        monthData = (cached.values || []).map(r => SHEET_CONFIG['nomina'].mapRow(r, monthIndex)).filter(function(r){ return (r[0]||'').toString().trim() !== '' || Number(r[1]) || Number(r[2]); });
+        renderMonthDetail(monthIndex);
+        Components.showToast('Mostrando datos en cache', 'warning');
+      } else {
+        const detail = document.getElementById('nomina-detail');
+        monthData = []; renderMonthDetail(monthIndex); Components.showToast('No hay hoja para este mes. Puedes crear registros.', 'info');
+      }
+    }
+  }
+
+  function renderMonthDetail(monthIndex) {
+    const detail = document.getElementById('nomina-detail');
+    if (!detail) return;
+    detail.innerHTML = '';
+
+    const monthName = MONTHS[monthIndex].name;
+
+    // Calculate badges
+    let sueldoReal = 0;
+    let totalCostos = 0;
+    monthData.forEach(row => {
+      const sr = Number(row[1]) || 0;
+      const cost = Number(row[2]) || 0;
+      if (sr > sueldoReal) sueldoReal = sr;
+      totalCostos += cost;
+    });
+    const disponible = sueldoReal - totalCostos;
+
+    // Month title
+    const title = document.createElement('h2');
+    title.className = 'page-title mt-lg mb-md';
+    title.textContent = MONTHS[monthIndex].icon + ' ' + monthName;
+    detail.appendChild(title);
+
+    // Badges
+    const badgeContainer = document.createElement('div');
+    badgeContainer.className = 'badge-container';
+    badgeContainer.appendChild(Components.createBadge('SUELDO REAL', maskValue(formatCOP(sueldoReal)), '\uD83D\uDCB5'));
+    badgeContainer.appendChild(Components.createBadge('SUELDO', maskValue(formatCOP(sueldoReal)), '\uD83D\uDCB3'));
+    const dispBadge = Components.createBadge('DISPONIBLE', maskValue(formatCOP(disponible)), '\u2705');
+    dispBadge.id = 'badge-disponible';
+    badgeContainer.appendChild(dispBadge);
+    detail.appendChild(badgeContainer);
+
+    // Table
+    const tableContainer = document.createElement('div');
+    tableContainer.id = 'table-nomina';
+    detail.appendChild(tableContainer);
+    renderNominaTable(tableContainer);
+
+    // Add record form
+    const form = Components.createFormCard('Agregar Registro', [
+      { name: 'concepto', label: 'Concepto', placeholder: 'Concepto (ej: Sueldo)', type: 'text' },
+      { name: 'valor', label: 'Valor', placeholder: '0', type: 'number' },
+      { name: 'observacion', label: 'Observacion', placeholder: 'Observacion', type: 'text', required: false }
+    ], handleAdd);
+    detail.appendChild(form);
+
+    // =================== SECCION BONO ===================
+    const bonoSection = document.createElement('div');
+    bonoSection.className = 'mt-lg';
+    bonoSection.id = 'bono-section';
+    bonoSection.innerHTML = '<div class="collapsible-header" id="bono-header"><span>' + String.fromCodePoint(0x1F31F) + ' Bono</span><span id="bono-chevron">' + String.fromCodePoint(0x25BC) + '</span></div><div class="collapsible-content" id="bono-content"><div id="bono-table-container"></div><div id="bono-form-container" class="mt-md"></div></div>';
+    detail.appendChild(bonoSection);
+    document.getElementById('bono-header').addEventListener('click', () => {
+      const content = document.getElementById('bono-content');
+      const chevron = document.getElementById('bono-chevron');
+      content.classList.toggle('open');
+      chevron.textContent = content.classList.contains('open') ? String.fromCodePoint(0x25B2) : String.fromCodePoint(0x25BC);
+    });
+    loadBonoData();
+
+  }
+
+  function renderNominaTable(tableContainer) {
+    tableContainer.innerHTML = '';
+
+    const headers = ['CONCEPTO', 'COSTO', 'ACCIONES'];
+
+    const container = document.createElement('div');
+    container.className = 'table-container';
+
+    const table = document.createElement('table');
+    table.className = 'data-table';
+
+    const thead = document.createElement('thead');
+    const headerRow = document.createElement('tr');
+    headers.forEach(h => {
+      const th = document.createElement('th');
+      th.textContent = h;
+      headerRow.appendChild(th);
+    });
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+
+    const tbody = document.createElement('tbody');
+    monthData.forEach((row, rowIdx) => {
+      const tr = document.createElement('tr');
+      tr.dataset.rowIndex = rowIdx;
+
+      // Data cells: concepto, sueldoReal, costo, disponible
+      for (let i = 0; i < 4; i++) {
+        const td = document.createElement('td');
+        if (i === 0) {
+          td.textContent = row[i] || '';
+        } else {
+          td.textContent = maskValue(formatCOP(Number(row[i]) || 0));
+        }
+        tr.appendChild(td);
+      }
+
+      // Actions cell
+      const actionsCell = document.createElement('td');
+      actionsCell.className = 'actions-cell';
+
+      const checkBtn = document.createElement('button');
+      checkBtn.className = 'btn-icon';
+      checkBtn.textContent = '\u2713';
+      checkBtn.title = 'Confirmar';
+      actionsCell.appendChild(checkBtn);
+
+      const editBtn = document.createElement('button');
+      editBtn.className = 'btn-icon btn-icon-edit';
+      editBtn.textContent = '\u270F\uFE0F';
+      editBtn.title = 'Editar';
+      editBtn.addEventListener('click', () => handleEdit(rowIdx));
+      actionsCell.appendChild(editBtn);
+
+      const delBtn = document.createElement('button');
+      delBtn.className = 'btn-icon btn-icon-danger';
+      delBtn.textContent = '\uD83D\uDDD1\uFE0F';
+      delBtn.title = 'Eliminar';
+      delBtn.addEventListener('click', () => handleDelete(rowIdx));
+      actionsCell.appendChild(delBtn);
+
+      tr.appendChild(actionsCell);
+      tbody.appendChild(tr);
+    });
+
+    table.appendChild(tbody);
+    container.appendChild(table);
+    tableContainer.appendChild(container);
+  }
+
+  async function handleAdd(formData) {
+    // Calculate disponible
+    let sueldoReal = 0;
+    monthData.forEach(row => {
+      const sr = Number(row[1]) || 0;
+      if (sr > sueldoReal) sueldoReal = sr;
+    });
+
+    const costo = Number(formData.valor) || 0;
+    const values = [formData.concepto, '0', String(costo), '0'];
+    monthData.push(values);
+
+    const tableContainer = document.getElementById('table-nomina');
+    if (tableContainer) renderNominaTable(tableContainer);
+    updateBadges();
+
+    const sheetName = SHEET_CONFIG['nomina'].getSheetName(selectedMonth);
+    await SyncModule.enqueue({
+      type: 'create',
+      module: 'nomina',
+      sheetName: sheetName,
+      values: values
+    });
+    await CacheModule.saveSheetData(sheetName, { values: monthData, headers: SHEET_CONFIG['nomina'].columns });
+    Components.showToast('Registro agregado', 'success');
+  }
+
+  function handleEdit(rowIndex) {
+    const tableContainer = document.getElementById('table-nomina');
+    if (!tableContainer) return;
+
+    const table = tableContainer.querySelector('table');
+    if (!table) return;
+
+    const row = table.querySelectorAll('tbody tr')[rowIndex];
+    if (!row) return;
+
+    const currentData = monthData[rowIndex];
+    row.classList.add('editing');
+
+    const cells = row.querySelectorAll('td');
+    for (let i = 0; i < 4; i++) {
+      const cell = cells[i];
+      const value = currentData[i] || '';
+      const type = i === 0 ? 'text' : 'number';
+      cell.innerHTML = `<input class="form-control" type="${type}" value="${value}">`;
+    }
+
+    const actionsCell = cells[4];
+    actionsCell.innerHTML = '';
+    const saveBtn = document.createElement('button');
+    saveBtn.className = 'btn-icon';
+    saveBtn.textContent = '\u2713';
+    saveBtn.addEventListener('click', () => saveEdit(rowIndex, row));
+
+    const cancelBtn = document.createElement('button');
+    cancelBtn.className = 'btn-icon';
+    cancelBtn.textContent = '\u2718';
+    cancelBtn.addEventListener('click', () => {
+      const tc = document.getElementById('table-nomina');
+      if (tc) renderNominaTable(tc);
+    });
+
+    actionsCell.appendChild(saveBtn);
+    actionsCell.appendChild(cancelBtn);
+  }
+
+  async function saveEdit(rowIndex, row) {
+    const inputs = row.querySelectorAll('input');
+    const newValues = Array.from(inputs).map(inp => inp.value);
+
+    monthData[rowIndex] = newValues;
+    const tableContainer = document.getElementById('table-nomina');
+    if (tableContainer) renderNominaTable(tableContainer);
+    updateBadges();
+
+    const sheetName = SHEET_CONFIG['nomina'].getSheetName(selectedMonth);
+    await SyncModule.enqueue({
+      type: 'update',
+      module: 'nomina',
+      sheetName: sheetName,
+      rowIndex: rowIndex + 1,
+      values: newValues
+    });
+    await CacheModule.saveSheetData(sheetName, { values: monthData, headers: SHEET_CONFIG['nomina'].columns });
+    Components.showToast('Registro actualizado', 'success');
+  }
+
+  function handleDelete(rowIndex) {
+    Components.createModal(
+      'Eliminar Registro',
+      '\u00BFEstas seguro de que deseas eliminar este registro?',
+      async () => {
+        const sheetName = SHEET_CONFIG['nomina'].getSheetName(selectedMonth);
+        monthData.splice(rowIndex, 1);
+        const tableContainer = document.getElementById('table-nomina');
+        if (tableContainer) renderNominaTable(tableContainer);
+        updateBadges();
+
+        await SyncModule.enqueue({
+          type: 'delete',
+          module: 'nomina',
+          sheetName: sheetName,
+          rowIndex: rowIndex + 1
+        });
+        await CacheModule.saveSheetData(sheetName, { values: monthData, headers: SHEET_CONFIG['nomina'].columns });
+        Components.showToast('Registro eliminado', 'success');
+      }
+    );
+  }
+
+  function updateBadges() {
+    let sueldoReal = 0;
+    let totalCostos = 0;
+    monthData.forEach(row => {
+      const sr = Number(row[1]) || 0;
+      const cost = Number(row[2]) || 0;
+      if (sr > sueldoReal) sueldoReal = sr;
+      totalCostos += cost;
+    });
+    const disponible = sueldoReal - totalCostos;
+
+    const dispBadge = document.getElementById('badge-disponible');
+    if (dispBadge) {
+      const valueEl = dispBadge.querySelector('.badge-value');
+      if (valueEl) valueEl.textContent = maskValue(formatCOP(disponible));
+    }
+  }
+
+
+  // =================== BONO FUNCTIONS ===================
+  let bonoData = [];
+
+  async function loadBonoData() {
+    try {
+      const sheetName = SHEET_CONFIG['bono'].sheetName;
+      let sheetData = await CacheModule.getSheetData(sheetName);
+      if (!sheetData) {
+        sheetData = await GraphModule.readSheet(sheetName);
+        await CacheModule.saveSheetData(sheetName, sheetData);
+      }
+      bonoData = (sheetData.values || []).filter(r => r[0] || Number(r[1]));
+    } catch (err) {
+      const cached = await CacheModule.getSheetData(SHEET_CONFIG['bono'].sheetName);
+      if (cached) { bonoData = (cached.values || []).filter(r => r[0] || Number(r[1])); }
+      else { bonoData = []; }
+    }
+    renderBonoTable();
+    renderBonoForm();
+  }
+
+  function renderBonoTable() {
+    const container = document.getElementById('bono-table-container');
+    if (!container) return;
+    container.innerHTML = '';
+    if (bonoData.length === 0) { container.innerHTML = '<p class="text-light text-sm">No hay rubros de bono.</p>'; return; }
+    const wrap = document.createElement('div'); wrap.className = 'table-container';
+    const table = document.createElement('table'); table.className = 'data-table';
+    const thead = document.createElement('thead'); const hr = document.createElement('tr');
+    ['CONCEPTO', 'VALOR', 'ACCIONES'].forEach(h => { const th = document.createElement('th'); th.textContent = h; hr.appendChild(th); });
+    thead.appendChild(hr); table.appendChild(thead);
+    const tbody = document.createElement('tbody'); let totalBono = 0;
+    bonoData.forEach((row, idx) => {
+      const tr = document.createElement('tr');
+      const td0 = document.createElement('td'); td0.textContent = row[0] || ''; tr.appendChild(td0);
+      const td1 = document.createElement('td'); const v = Number(row[1]) || 0; if ((row[0]||'').toLowerCase().includes('saldo')) { totalBono += v; } td1.textContent = formatCOP(v); tr.appendChild(td1);
+      const tdA = document.createElement('td'); tdA.className = 'actions-cell';
+      const eBtn = document.createElement('button'); eBtn.className = 'btn-icon btn-icon-edit'; eBtn.textContent = String.fromCodePoint(0x270F, 0xFE0F); eBtn.addEventListener('click', () => handleBonoEdit(idx)); tdA.appendChild(eBtn);
+      const dBtn = document.createElement('button'); dBtn.className = 'btn-icon btn-icon-danger'; dBtn.textContent = String.fromCodePoint(0x1F5D1, 0xFE0F); dBtn.addEventListener('click', () => handleBonoDelete(idx)); tdA.appendChild(dBtn);
+      tr.appendChild(tdA); tbody.appendChild(tr);
+    });
+    const totR = document.createElement('tr'); totR.style.fontWeight = 'bold';
+    const totL = document.createElement('td'); totL.textContent = 'TOTAL BONO'; totR.appendChild(totL);
+    const totV = document.createElement('td'); totV.textContent = maskValue(formatCOP(totalBono)); totR.appendChild(totV);
+    totR.appendChild(document.createElement('td')); tbody.appendChild(totR);
+    table.appendChild(tbody); wrap.appendChild(table); container.appendChild(wrap);
+  }
+
+  function renderBonoForm() {
+    const container = document.getElementById('bono-form-container'); if (!container) return;
+    container.innerHTML = '';
+    const form = Components.createFormCard('Agregar Rubro de Bono', [
+      { name: 'concepto', label: 'Concepto', placeholder: 'Ej: Prima', type: 'text' },
+      { name: 'valor', label: 'Valor', placeholder: '0', type: 'number' }
+    ], handleBonoAdd);
+    container.appendChild(form);
+  }
+
+  async function handleBonoAdd(formData) {
+    const values = [formData.concepto, String(Number(formData.valor) || 0)];
+    bonoData.push(values); renderBonoTable();
+    const sheetName = SHEET_CONFIG['bono'].sheetName;
+    await SyncModule.enqueue({ type: 'create', module: 'bono', sheetName, values });
+    await CacheModule.saveSheetData(sheetName, { values: bonoData, headers: SHEET_CONFIG['bono'].columns });
+    Components.showToast('Rubro de bono agregado', 'success');
+  }
+
+  function handleBonoEdit(rowIndex) {
+    const container = document.getElementById('bono-table-container'); if (!container) return;
+    const table = container.querySelector('table'); if (!table) return;
+    const row = table.querySelectorAll('tbody tr')[rowIndex]; if (!row) return;
+    const cur = bonoData[rowIndex]; row.classList.add('editing');
+    const cells = row.querySelectorAll('td');
+    cells[0].innerHTML = '<input class="form-control" type="text" value="' + (cur[0] || '') + '">';
+    cells[1].innerHTML = '<input class="form-control" type="number" value="' + (cur[1] || 0) + '">';
+    const ac = cells[2]; ac.innerHTML = '';
+    const sBtn = document.createElement('button'); sBtn.className = 'btn-icon'; sBtn.textContent = String.fromCodePoint(0x2713);
+    sBtn.addEventListener('click', async () => {
+      const inputs = row.querySelectorAll('input');
+      bonoData[rowIndex] = [inputs[0].value, inputs[1].value]; renderBonoTable();
+      const sheetName = SHEET_CONFIG['bono'].sheetName;
+      await SyncModule.enqueue({ type: 'update', module: 'bono', sheetName, rowIndex: rowIndex + 1, values: bonoData[rowIndex] });
+      await CacheModule.saveSheetData(sheetName, { values: bonoData, headers: SHEET_CONFIG['bono'].columns });
+      Components.showToast('Rubro actualizado', 'success');
+    });
+    const cBtn = document.createElement('button'); cBtn.className = 'btn-icon'; cBtn.textContent = String.fromCodePoint(0x2718);
+    cBtn.addEventListener('click', () => renderBonoTable());
+    ac.appendChild(sBtn); ac.appendChild(cBtn);
+  }
+
+  function handleBonoDelete(rowIndex) {
+    Components.createModal('Eliminar Rubro', String.fromCodePoint(0xBF) + 'Eliminar este rubro de bono?', async () => {
+      bonoData.splice(rowIndex, 1); renderBonoTable();
+      const sheetName = SHEET_CONFIG['bono'].sheetName;
+      await SyncModule.enqueue({ type: 'delete', module: 'bono', sheetName, rowIndex: rowIndex + 1 });
+      await CacheModule.saveSheetData(sheetName, { values: bonoData, headers: SHEET_CONFIG['bono'].columns });
+      Components.showToast('Rubro eliminado', 'success');
+    });
+  }
+
+  return { render };
+})();
+// app.js - Router hash-based y bootstrap de la aplicacion.
+
+function navigateTo(route) {
+  window.location.hash = route;
+}
+
+const App = (() => {
+  let isInitialized = false;
+
+  async function init() {
+    try {
+      await CacheModule.initialize();
+      AuthModule.initialize();
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      if (AuthModule.isAuthenticated()) {
+        renderApp();
+      } else {
+        renderLogin();
+      }
+    } catch (err) {
+      console.error('App initialization error:', err);
+      renderLogin('Error al inicializar la aplicacion. Intenta de nuevo.');
+    }
+  }
+
+  function renderLogin(errorMessage) {
+    const app = document.body;
+    app.innerHTML = `
+      <div class="login-screen">
+        <div class="login-card">
+          <h1 class="login-title">Finanzas - Control Personal</h1>
+          <p class="login-subtitle">Inicia sesion para gestionar tus finanzas</p>
+          <div id="login-error" class="text-danger text-sm mb-md" style="min-height:1.5em;">${errorMessage || ''}</div>
+          <button class="btn-microsoft" id="btn-login">
+            <svg width="20" height="20" viewBox="0 0 21 21"><rect x="1" y="1" width="9" height="9" fill="#f25022"/><rect x="11" y="1" width="9" height="9" fill="#7fba00"/><rect x="1" y="11" width="9" height="9" fill="#00a4ef"/><rect x="11" y="11" width="9" height="9" fill="#ffb900"/></svg>
+            Iniciar Sesion con Microsoft
+          </button>
+        </div>
+      </div>
+    `;
+    document.getElementById('btn-login').addEventListener('click', handleLogin);
+  }
+
+  async function handleLogin() {
+    const errorEl = document.getElementById('login-error');
+    const btn = document.getElementById('btn-login');
+    try {
+      btn.disabled = true;
+      btn.textContent = 'Iniciando sesion...';
+      if (errorEl) errorEl.textContent = '';
+      await AuthModule.login();
+      if (AuthModule.isAuthenticated()) {
+        renderApp();
+      }
+    } catch (err) {
+      console.error('Login error:', err);
+      if (errorEl) errorEl.textContent = 'Error al iniciar sesion. ' + (err.message || 'Intenta de nuevo.');
+      btn.disabled = false;
+      btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 21 21"><rect x="1" y="1" width="9" height="9" fill="#f25022"/><rect x="11" y="1" width="9" height="9" fill="#7fba00"/><rect x="1" y="11" width="9" height="9" fill="#00a4ef"/><rect x="11" y="11" width="9" height="9" fill="#ffb900"/></svg> Iniciar Sesion con Microsoft';
+    }
+  }
+
+  function renderApp() {
+    const app = document.body;
+    app.innerHTML = '';
+
+    // Simple layout: fixed sidebar + content with margin
+    const container = document.createElement('div');
+    container.id = 'app-container';
+
+    // Render sidebar (fixed position via CSS)
+    SidebarModule.render(container);
+
+    // Main content wrapper - offset by sidebar width
+    const mainWrapper = document.createElement('div');
+    mainWrapper.id = 'main-wrapper';
+    mainWrapper.style.marginLeft = '220px';
+    mainWrapper.style.minHeight = '100vh';
+    mainWrapper.style.backgroundColor = '#f5f5f5';
+
+    // Header bar
+    const user = AuthModule.getCurrentUser();
+    const headerBar = document.createElement('header');
+    headerBar.style.cssText = 'display:flex;align-items:center;justify-content:flex-end;padding:12px 24px;background:#fff;border-bottom:1px solid #e0e0e0;';
+    
+    if (user) {
+      headerBar.innerHTML = '<div style="display:flex;align-items:center;gap:8px;"><div style="width:36px;height:36px;border-radius:50%;background:#4CAF50;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;">' + user.avatarInitial + '</div><div><div style="font-size:0.875rem;font-weight:600;">' + user.displayName + '</div><div style="font-size:0.75rem;color:#666;">' + user.email + '</div></div></div>';
+    }
+    
+    const togBtn = document.createElement('button'); togBtn.id='toggle-vis'; togBtn.style.cssText='font-size:1.3rem;margin-left:12px;cursor:pointer;border:none;background:none;'; togBtn.title='Ocultar/Mostrar valores'; togBtn.textContent='\u{1F441}'; togBtn.addEventListener('click', function(){ const hidden = togBtn.dataset.hidden === '1'; togBtn.dataset.hidden = hidden ? '0' : '1'; document.querySelectorAll('.badge-value').forEach(function(el){ if(!hidden){el.dataset.rv=el.textContent;el.textContent='\u0024 \u2022\u2022\u2022\u2022';}else{if(el.dataset.rv)el.textContent=el.dataset.rv;} }); document.querySelectorAll('td').forEach(function(el){ var t=el.textContent; if(t.indexOf('\u0024 ')===0 && t.length>3){ if(!hidden){el.dataset.rv=t;el.textContent='\u0024 \u2022\u2022\u2022\u2022';}else{if(el.dataset.rv)el.textContent=el.dataset.rv;} } }); }); headerBar.appendChild(togBtn);
+    mainWrapper.appendChild(headerBar);
+
+    // Content area
+    const mainContent = document.createElement('main');
+    mainContent.id = 'main-content';
+    mainContent.style.cssText = 'padding:24px;overflow-y:auto;';
+    mainWrapper.appendChild(mainContent);
+
+    container.appendChild(mainWrapper);
+    app.appendChild(container);
+
+    setupRouter();
+    handleRoute();
+    isInitialized = true;
+  }
+
+  function setupRouter() {
+    window.addEventListener('hashchange', handleRoute);
+  }
+
+  function handleRoute() {
+    const hash = window.location.hash || '#/';
+    const route = ROUTES[hash] || 'dashboard';
+    const mainContent = document.getElementById('main-content');
+    if (!mainContent) return;
+
+    SidebarModule.updateActiveState();
+
+    switch (route) {
+      case 'dashboard':
+        DashboardModule.render(mainContent);
+        break;
+      case 'gastos-apartamento':
+        GastosApartamentoModule.render(mainContent);
+        break;
+      case 'gastos-obra':
+        GastosObraModule.render(mainContent);
+        break;
+      case 'mis-ahorros':
+        MisAhorrosModule.render(mainContent);
+        break;
+      case 'nomina':
+        NominaModule.render(mainContent);
+        break;
+      default:
+        DashboardModule.render(mainContent);
+    }
+  }
+
+  return { init };
+})();
+
+document.addEventListener('DOMContentLoaded', () => {
+  App.init();
+});
+    </script>
+</body>
+</html>
