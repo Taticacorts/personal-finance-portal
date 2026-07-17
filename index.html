@@ -3740,12 +3740,16 @@ const NominaModule = (() => {
     renderNominaTable(tableContainer);
 
     // Add record form
-    const form = Components.createFormCard('Agregar Registro', [
-      { name: 'concepto', label: 'Concepto', placeholder: 'Concepto (ej: Sueldo)', type: 'text' },
-      { name: 'valor', label: 'Valor', placeholder: '0', type: 'number' },
-      { name: 'observacion', label: 'Observacion', placeholder: 'Observacion', type: 'text', required: false }
-    ], handleAdd);
-    detail.appendChild(form);
+    // Compact Agregar Registro form
+    var fCard = document.createElement('div'); fCard.className = 'form-card'; fCard.style.cssText = 'padding:12px;margin-top:12px;';
+    var fTitle = document.createElement('h3'); fTitle.style.cssText = 'font-size:0.85rem;margin-bottom:8px;font-weight:600;'; fTitle.textContent = '+ Agregar Registro'; fCard.appendChild(fTitle);
+    var nForm = document.createElement('form'); nForm.style.cssText = 'display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px;align-items:end;';
+    nForm.addEventListener('submit', function(e) { e.preventDefault(); handleAdd({ concepto: nForm.querySelector('[name=concepto]').value, valor: nForm.querySelector('[name=valor]').value }); nForm.reset(); });
+    var g1 = document.createElement('div'); g1.innerHTML = '<label style="font-size:0.65rem;color:#666;display:block;">Concepto</label><input class="form-control" style="padding:4px 8px;font-size:0.8rem;" name="concepto" placeholder="Ej: Arriendo" required>'; nForm.appendChild(g1);
+    var g2 = document.createElement('div'); g2.innerHTML = '<label style="font-size:0.65rem;color:#666;display:block;">Valor</label><input class="form-control" style="padding:4px 8px;font-size:0.8rem;" name="valor" type="number" placeholder="0" required>'; nForm.appendChild(g2);
+    var g3 = document.createElement('div'); g3.innerHTML = '<label style="font-size:0.65rem;color:#666;display:block;">Obs.</label><input class="form-control" style="padding:4px 8px;font-size:0.8rem;" name="obs" placeholder="Opcional">'; nForm.appendChild(g3);
+    var fBtn = document.createElement('button'); fBtn.type = 'submit'; fBtn.className = 'btn btn-primary'; fBtn.style.cssText = 'padding:6px 12px;font-size:0.75rem;height:30px;'; fBtn.textContent = 'Agregar'; nForm.appendChild(fBtn);
+    fCard.appendChild(nForm); detail.appendChild(fCard);
 
     // =================== SECCION BONO ===================
     const bonoSection = document.createElement('div');
