@@ -3015,15 +3015,33 @@ const GastosObraModule = (() => {
     if (!tableSection) return;
     tableSection.innerHTML = '';
 
-    const headers = MODULE_COLUMNS['gastos-obra'].headers;
-    const rows = data.map(row => [row[0] || '', maskValue(formatCOP(Number(row[1]) || 0)), row[2] || '']);
+    const container = document.createElement('div');
+    container.className = 'table-container';
+    const table = document.createElement('table');
+    table.className = 'data-table';
+    table.style.fontSize = '0.75rem';
 
-    const table = Components.createTable(headers, rows, {
-      onEdit: handleEdit,
-      onDelete: handleDelete
+    const thead = document.createElement('thead');
+    const headerRow = document.createElement('tr');
+    ['MATERIALES', 'COSTOS', 'OBS.', ''].forEach(h => {
+      const th = document.createElement('th'); th.textContent = h; th.style.padding = '6px 8px'; th.style.fontSize = '0.65rem'; headerRow.appendChild(th);
+    });
+    thead.appendChild(headerRow); table.appendChild(thead);
+
+    const tbody = document.createElement('tbody');
+    data.forEach((row, rowIdx) => {
+      const tr = document.createElement('tr');
+      const tdMat = document.createElement('td'); tdMat.textContent = row[0] || ''; tdMat.style.padding = '4px 8px'; tdMat.style.fontWeight = '500'; tr.appendChild(tdMat);
+      const tdCost = document.createElement('td'); tdCost.textContent = maskValue(formatCOP(Number(row[1]) || 0)); tdCost.style.padding = '4px 8px'; tdCost.style.fontWeight = '600'; tdCost.style.color = 'var(--color-primary)'; tr.appendChild(tdCost);
+      const tdObs = document.createElement('td'); tdObs.textContent = row[2] || ''; tdObs.style.padding = '4px 8px'; tdObs.style.fontSize = '0.7rem'; tdObs.style.color = 'var(--color-text-light)'; tr.appendChild(tdObs);
+      const actionsCell = document.createElement('td'); actionsCell.className = 'actions-cell'; actionsCell.style.padding = '4px';
+      const editBtn = document.createElement('button'); editBtn.className = 'btn-icon btn-icon-edit'; editBtn.style.width = '24px'; editBtn.style.height = '24px'; editBtn.style.fontSize = '0.7rem'; editBtn.textContent = String.fromCodePoint(0x270F, 0xFE0F); editBtn.addEventListener('click', () => handleEdit(rowIdx)); actionsCell.appendChild(editBtn);
+      const delBtn = document.createElement('button'); delBtn.className = 'btn-icon btn-icon-danger'; delBtn.style.width = '24px'; delBtn.style.height = '24px'; delBtn.style.fontSize = '0.7rem'; delBtn.textContent = String.fromCodePoint(0x1F5D1, 0xFE0F); delBtn.addEventListener('click', () => handleDelete(rowIdx)); actionsCell.appendChild(delBtn);
+      tr.appendChild(actionsCell);
+      tbody.appendChild(tr);
     });
 
-    tableSection.appendChild(table);
+    table.appendChild(tbody); container.appendChild(table); tableSection.appendChild(container);
     updateTotal();
   }
 
@@ -4181,7 +4199,30 @@ const App = (() => {
 
 document.addEventListener('DOMContentLoaded', () => {
   App.init();
-});
+
+  // Eye toggle - show/hide values
+  var eyeBtn2 = document.createElement('button');
+  eyeBtn2.id = 'eye-float';
+  eyeBtn2.textContent = String.fromCodePoint(0x1F441);
+  eyeBtn2.title = 'Mostrar valores';
+  eyeBtn2.style.cssText = 'position:fixed;top:12px;right:12px;z-index:99999;font-size:1.5rem;background:#fff;border:2px solid #ccc;border-radius:50%;width:44px;height:44px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.15);';
+  eyeBtn2.addEventListener('click', function() {
+    _valuesVisible = !_valuesVisible;
+    eyeBtn2.textContent = _valuesVisible ? String.fromCodePoint(0x1F440) : String.fromCodePoint(0x1F441);
+    eyeBtn2.title = _valuesVisible ? 'Ocultar valores' : 'Mostrar valores';
+    // Re-render current page
+    var hash = window.location.hash || '#/';
+    var route = ROUTES[hash] || 'dashboard';
+    var mc = document.getElementById('main-content');
+    if (mc) {
+      if (route === 'gastos-apartamento') GastosApartamentoModule.render(mc);
+      else if (route === 'gastos-obra') GastosObraModule.render(mc);
+      else if (route === 'mis-ahorros') MisAhorrosModule.render(mc);
+      else if (route === 'nomina') NominaModule.render(mc);
+      else DashboardModule.render(mc);
+    }
+  });
+  document.body.appendChild(eyeBtn2);});
     </script>
 </body>
 </html>
