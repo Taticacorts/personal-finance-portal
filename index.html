@@ -3827,60 +3827,35 @@ const NominaModule = (() => {
   function handleEdit(rowIndex) {
     const tableContainer = document.getElementById('table-nomina');
     if (!tableContainer) return;
-
     const table = tableContainer.querySelector('table');
     if (!table) return;
-
     const row = table.querySelectorAll('tbody tr')[rowIndex];
     if (!row) return;
-
     const currentData = monthData[rowIndex];
     row.classList.add('editing');
-
     const cells = row.querySelectorAll('td');
-    for (let i = 0; i < 4; i++) {
-      const cell = cells[i];
-      const value = currentData[i] || '';
-      const type = i === 0 ? 'text' : 'number';
-      cell.innerHTML = `<input class="form-control" type="${type}" value="${value}">`;
-    }
-
-    const actionsCell = cells[4];
-    actionsCell.innerHTML = '';
-    const saveBtn = document.createElement('button');
-    saveBtn.className = 'btn-icon';
-    saveBtn.textContent = '\u2713';
-    saveBtn.addEventListener('click', () => saveEdit(rowIndex, row));
-
-    const cancelBtn = document.createElement('button');
-    cancelBtn.className = 'btn-icon';
-    cancelBtn.textContent = '\u2718';
-    cancelBtn.addEventListener('click', () => {
-      const tc = document.getElementById('table-nomina');
-      if (tc) renderNominaTable(tc);
-    });
-
-    actionsCell.appendChild(saveBtn);
-    actionsCell.appendChild(cancelBtn);
+    // Concepto cell (0)
+    cells[0].innerHTML = '<input class="form-control" style="padding:3px 6px;font-size:0.75rem;" type="text" value="' + (currentData[0] || '') + '">';
+    // Costo cell (1)
+    var costoVal = Number(currentData[1]) || Number(currentData[2]) || 0;
+    cells[1].innerHTML = '<input class="form-control" style="padding:3px 6px;font-size:0.75rem;" type="number" value="' + costoVal + '">';
+    // Actions cell (2) - save/cancel buttons
+    var actionsCell = cells[2]; actionsCell.innerHTML = '';
+    var saveBtn = document.createElement('button'); saveBtn.className = 'btn-icon'; saveBtn.style.width = '24px'; saveBtn.style.height = '24px'; saveBtn.textContent = String.fromCodePoint(0x2713); saveBtn.title = 'Guardar';
+    saveBtn.addEventListener('click', function() { saveEdit(rowIndex, row); });
+    var cancelBtn = document.createElement('button'); cancelBtn.className = 'btn-icon'; cancelBtn.style.width = '24px'; cancelBtn.style.height = '24px'; cancelBtn.textContent = String.fromCodePoint(0x2718); cancelBtn.title = 'Cancelar';
+    cancelBtn.addEventListener('click', function() { var tc = document.getElementById('table-nomina'); if (tc) renderNominaTable(tc); });
+    actionsCell.appendChild(saveBtn); actionsCell.appendChild(cancelBtn);
   }
 
   async function saveEdit(rowIndex, row) {
-    const inputs = row.querySelectorAll('input');
-    const newValues = Array.from(inputs).map(inp => inp.value);
-
+    var inputs = row.querySelectorAll('input');
+    var newValues = [inputs[0].value, inputs[1].value];
     monthData[rowIndex] = newValues;
-    const tableContainer = document.getElementById('table-nomina');
+    var tableContainer = document.getElementById('table-nomina');
     if (tableContainer) renderNominaTable(tableContainer);
-    updateBadges();
-
-    const sheetName = SHEET_CONFIG['nomina'].getSheetName(selectedMonth);
-    await SyncModule.enqueue({
-      type: 'update',
-      module: 'nomina',
-      sheetName: sheetName,
-      rowIndex: rowIndex + 1,
-      values: newValues
-    });
+    var sheetName = SHEET_CONFIG['nomina'].getSheetName(selectedMonth);
+    await SyncModule.enqueue({ type: 'update', module: 'nomina', sheetName: sheetName, rowIndex: rowIndex + 1, values: newValues });
     await CacheModule.saveSheetData(sheetName, { values: monthData, headers: SHEET_CONFIG['nomina'].columns });
     Components.showToast('Registro actualizado', 'success');
   }
