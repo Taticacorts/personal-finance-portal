@@ -1263,9 +1263,9 @@ const ROUTES = {
 };
 
 // Global value visibility state
-let _valuesVisible = false;
+let _valuesVisible = true;
 function isValuesVisible() { return _valuesVisible; }
-function maskValue(val) { return _valuesVisible ? val : '....'; }
+function maskValue(val) { return val; }
 // After render, mark all monetary cells with real value
 function markMonetaryCells() {
   document.querySelectorAll('.data-table td').forEach(td => {
@@ -4200,29 +4200,7 @@ const App = (() => {
 document.addEventListener('DOMContentLoaded', () => {
   App.init();
 
-  // Eye toggle - show/hide values
-  var eyeBtn2 = document.createElement('button');
-  eyeBtn2.id = 'eye-float';
-  eyeBtn2.textContent = String.fromCodePoint(0x1F441);
-  eyeBtn2.title = 'Mostrar valores';
-  eyeBtn2.style.cssText = 'position:fixed;top:12px;right:12px;z-index:99999;font-size:1.5rem;background:#fff;border:2px solid #ccc;border-radius:50%;width:44px;height:44px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.15);';
-  eyeBtn2.addEventListener('click', function() {
-    _valuesVisible = !_valuesVisible;
-    eyeBtn2.textContent = _valuesVisible ? String.fromCodePoint(0x1F440) : String.fromCodePoint(0x1F441);
-    eyeBtn2.title = _valuesVisible ? 'Ocultar valores' : 'Mostrar valores';
-    // Re-render current page
-    var hash = window.location.hash || '#/';
-    var route = ROUTES[hash] || 'dashboard';
-    var mc = document.getElementById('main-content');
-    if (mc) {
-      if (route === 'gastos-apartamento') GastosApartamentoModule.render(mc);
-      else if (route === 'gastos-obra') GastosObraModule.render(mc);
-      else if (route === 'mis-ahorros') MisAhorrosModule.render(mc);
-      else if (route === 'nomina') NominaModule.render(mc);
-      else DashboardModule.render(mc);
-    }
-  });
-  document.body.appendChild(eyeBtn2);});
+});
     </script>
 </body>
 </html>
