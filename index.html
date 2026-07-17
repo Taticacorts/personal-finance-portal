@@ -1162,43 +1162,7 @@ textarea.form-control {
 /* visibility handled by JS */
 
 
-/* ========== MIS AHORROS - Card Layout ========== */
-.savings-cards { display: flex; flex-direction: column; gap: var(--spacing-md); }
-.savings-card {
-  background: var(--color-white); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm);
-  padding: var(--spacing-md) var(--spacing-lg); cursor: pointer;
-  transition: box-shadow 0.2s, transform 0.15s; border-left: 4px solid var(--color-accent);
-}
-.savings-card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
-.savings-card.expanded { box-shadow: var(--shadow-md); }
-.savings-card-header { display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-md); }
-.savings-card-name { font-weight: 600; font-size: var(--font-size-base); color: var(--color-text); flex: 1; }
-.savings-card-total { font-weight: 700; font-size: var(--font-size-lg); color: var(--color-primary); }
-.savings-card-bar { height: 6px; background: #eee; border-radius: 3px; margin-top: 8px; overflow: hidden; display: flex; }
-.savings-card-bar span { height: 100%; transition: width 0.3s; }
-.savings-card-detail {
-  display: none; margin-top: var(--spacing-md); padding-top: var(--spacing-md);
-  border-top: 1px solid var(--color-border);
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px;
-}
-.savings-card.expanded .savings-card-detail { display: grid; }
-.savings-card:not(.expanded) .savings-card-detail { display: none; }
-.savings-detail-item { text-align: center; }
-.savings-detail-item .sdl { font-size: 0.65rem; color: var(--color-text-light); text-transform: uppercase; }
-.savings-detail-item .sdv { font-size: 0.85rem; font-weight: 600; color: var(--color-text); }
-.savings-card-actions { display: flex; gap: 4px; margin-left: 8px; }
-.savings-card-venc { font-size: 0.75rem; margin-top: 6px; }
-.savings-card-venc.venc-ok { color: var(--color-success); }
-.savings-card-venc.venc-warn { color: var(--color-warning); }
-.savings-card-venc.venc-danger { color: var(--color-danger); font-weight: 600; }
-.savings-summary {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: var(--spacing-sm);
-  margin-bottom: var(--spacing-lg); padding: var(--spacing-md);
-  background: var(--color-primary-light); border-radius: var(--radius-lg);
-}
-.savings-summary-item { text-align: center; }
-.savings-summary-item .ssl { font-size: 0.65rem; color: var(--color-text-light); text-transform: uppercase; letter-spacing: 0.3px; }
-.savings-summary-item .ssv { font-size: 1rem; font-weight: 700; color: var(--color-primary); }
+
     </style>
 </head>
 <body>
@@ -3404,108 +3368,74 @@ const MisAhorrosModule = (() => {
     tableSection.innerHTML = '';
     const extraCols = getExtraCols();
     const vencCol = colVencimiento();
+    const headers = ['', 'RUBRO', 'TOTAL', 'EFECTIVO', 'CDT', 'CUENTA', 'INT.CDT', 'BCO SANT.', 'DAVIV', 'DOLLAR'];
+    extraCols.forEach(col => headers.push(col.toUpperCase()));
+    headers.push('VENC.');
 
-    // Column labels
-    const colLabels = ['Efectivo', 'CDT', 'Cuenta', 'Int.CDT', 'BcoSant.', 'Daviv', 'Dollar'];
-    extraCols.forEach(c => colLabels.push(c));
-    const barColors = ['#4CAF50','#2196F3','#9C27B0','#FF9800','#00BCD4','#E91E63','#607D8B','#795548','#CDDC39'];
+    const wrapper = document.createElement('div');
+    wrapper.className = 'table-container';
+    const table = document.createElement('table');
+    table.className = 'data-table';
+    table.style.fontSize = '0.75rem';
 
-    // Summary totals
-    const totals = new Array(colLabels.length).fill(0);
-    let grandTotal = 0;
-    data.forEach(row => {
-      const t = calcTotal(row);
-      grandTotal += t;
-      for (let i = FIXED_NUMERIC_START; i < vencCol; i++) { totals[i - FIXED_NUMERIC_START] += Number(row[i]) || 0; }
-    });
+    const thead = document.createElement('thead');
+    const headerRow = document.createElement('tr');
+    headers.forEach(h => { const th = document.createElement('th'); th.textContent = h; th.style.padding = '6px 8px'; th.style.fontSize = '0.65rem'; headerRow.appendChild(th); });
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
 
-    // Summary bar
-    const summary = document.createElement('div');
-    summary.className = 'savings-summary';
-    const gtItem = document.createElement('div'); gtItem.className = 'savings-summary-item';
-    gtItem.innerHTML = '<div class="ssl">TOTAL GENERAL</div><div class="ssv">' + maskValue(formatCOP(grandTotal)) + '</div>';
-    summary.appendChild(gtItem);
-    colLabels.forEach((label, idx) => {
-      if (totals[idx] > 0) {
-        const item = document.createElement('div'); item.className = 'savings-summary-item';
-        item.innerHTML = '<div class="ssl">' + label + '</div><div class="ssv">' + maskValue(formatCOP(totals[idx])) + '</div>';
-        summary.appendChild(item);
-      }
-    });
-    tableSection.appendChild(summary);
-
-    // Cards container
-    const cardsDiv = document.createElement('div');
-    cardsDiv.className = 'savings-cards';
-
+    const tbody = document.createElement('tbody');
     data.forEach((row, rowIdx) => {
-      const rubro = row[0] || '';
-      const total = calcTotal(row);
-      const card = document.createElement('div');
-      card.className = 'savings-card';
-
-      // Header
-      const header = document.createElement('div');
-      header.className = 'savings-card-header';
-      const name = document.createElement('span'); name.className = 'savings-card-name'; name.textContent = rubro;
-      const totalEl = document.createElement('span'); totalEl.className = 'savings-card-total'; totalEl.textContent = maskValue(formatCOP(total));
-      const actions = document.createElement('div'); actions.className = 'savings-card-actions';
-      const editBtn = document.createElement('button'); editBtn.className = 'btn-icon btn-icon-edit'; editBtn.textContent = String.fromCodePoint(0x270F, 0xFE0F);
-      editBtn.onclick = function(e) { e.stopPropagation(); handleEdit(rowIdx); };
-      const delBtn = document.createElement('button'); delBtn.className = 'btn-icon btn-icon-danger'; delBtn.textContent = String.fromCodePoint(0x1F5D1, 0xFE0F);
-      delBtn.onclick = function(e) { e.stopPropagation(); handleDelete(rowIdx); };
-      actions.appendChild(editBtn); actions.appendChild(delBtn);
-      header.appendChild(name); header.appendChild(totalEl); header.appendChild(actions);
-      card.appendChild(header);
-
-      // Distribution bar
-      if (total > 0) {
-        const bar = document.createElement('div'); bar.className = 'savings-card-bar';
-        for (let i = FIXED_NUMERIC_START; i < vencCol; i++) {
-          const v = Number(row[i]) || 0;
-          if (v > 0) {
-            const seg = document.createElement('span');
-            seg.style.width = Math.round((v / total) * 100) + '%';
-            seg.style.background = barColors[i - FIXED_NUMERIC_START] || '#999';
-            seg.title = colLabels[i - FIXED_NUMERIC_START] + ': ' + formatCOP(v);
-            bar.appendChild(seg);
-          }
-        }
-        card.appendChild(bar);
-      }
-
-      // Vencimiento indicator
-      const fechaStr = (row[vencCol] || '').toString().trim();
-      if (fechaStr) {
-        const vencDiv = document.createElement('div');
-        const d = parseDate(fechaStr);
-        let dias = d ? daysUntil(d) : null;
-        vencDiv.className = 'savings-card-venc';
-        if (dias !== null) {
-          if (dias <= 0) { vencDiv.classList.add('venc-danger'); vencDiv.textContent = String.fromCodePoint(0x1F534) + ' Vencido: ' + fechaStr; }
-          else if (dias <= 7) { vencDiv.classList.add('venc-danger'); vencDiv.textContent = String.fromCodePoint(0x1F534) + ' ' + dias + ' dia(s) - ' + fechaStr; }
-          else if (dias <= 30) { vencDiv.classList.add('venc-warn'); vencDiv.textContent = String.fromCodePoint(0x1F7E1) + ' ' + dias + ' dias - ' + fechaStr; }
-          else { vencDiv.classList.add('venc-ok'); vencDiv.textContent = String.fromCodePoint(0x1F7E2) + ' ' + dias + ' dias - ' + fechaStr; }
-        } else { vencDiv.textContent = fechaStr; }
-        card.appendChild(vencDiv);
-      }
-
-      // Expandible detail
-      const detail = document.createElement('div');
-      detail.className = 'savings-card-detail';
+      const tr = document.createElement('tr');
+      // Actions
+      const actionsCell = document.createElement('td'); actionsCell.className = 'actions-cell'; actionsCell.style.padding = '4px';
+      const editBtn = document.createElement('button'); editBtn.className = 'btn-icon btn-icon-edit'; editBtn.style.width = '24px'; editBtn.style.height = '24px'; editBtn.style.fontSize = '0.7rem'; editBtn.textContent = String.fromCodePoint(0x270F, 0xFE0F); editBtn.addEventListener('click', () => handleEdit(rowIdx)); actionsCell.appendChild(editBtn);
+      const delBtn = document.createElement('button'); delBtn.className = 'btn-icon btn-icon-danger'; delBtn.style.width = '24px'; delBtn.style.height = '24px'; delBtn.style.fontSize = '0.7rem'; delBtn.textContent = String.fromCodePoint(0x1F5D1, 0xFE0F); delBtn.addEventListener('click', () => handleDelete(rowIdx)); actionsCell.appendChild(delBtn);
+      tr.appendChild(actionsCell);
+      // Rubro
+      const rubroTd = document.createElement('td'); rubroTd.textContent = row[0] || ''; rubroTd.style.padding = '4px 8px'; rubroTd.style.fontWeight = '500'; tr.appendChild(rubroTd);
+      // Total
+      const totalTd = document.createElement('td'); totalTd.textContent = maskValue(formatCOP(calcTotal(row))); totalTd.style.padding = '4px 8px'; totalTd.style.fontWeight = '700'; totalTd.style.color = 'var(--color-primary)'; tr.appendChild(totalTd);
+      // Numeric columns
       for (let i = FIXED_NUMERIC_START; i < vencCol; i++) {
-        const item = document.createElement('div'); item.className = 'savings-detail-item';
-        item.innerHTML = '<div class="sdl">' + colLabels[i - FIXED_NUMERIC_START] + '</div><div class="sdv">' + maskValue(formatCOP(Number(row[i]) || 0)) + '</div>';
-        detail.appendChild(item);
+        const td = document.createElement('td'); td.style.padding = '4px 8px';
+        const val = row[i];
+        td.textContent = maskValue((val === '' || val === null || val === undefined) ? '$ 0' : (typeof val === 'string' && val.includes('$')) ? val : formatCOP(Number(val) || 0));
+        tr.appendChild(td);
       }
-      card.appendChild(detail);
-
-      // Toggle expand
-      card.onclick = function() { card.classList.toggle('expanded'); };
-      cardsDiv.appendChild(card);
+      // Vencimiento
+      const vencTd = document.createElement('td'); vencTd.style.padding = '4px 8px'; vencTd.style.fontSize = '0.7rem';
+      const fechaStr = (row[vencCol] || '').toString().trim();
+      vencTd.textContent = fechaStr;
+      if (fechaStr) {
+        const d = parseDate(fechaStr);
+        if (d) {
+          const dias = daysUntil(d);
+          if (dias !== null && dias <= 0) { vencTd.style.color = '#e53935'; vencTd.style.fontWeight = '700'; }
+          else if (dias !== null && dias <= 7) { vencTd.style.color = '#e53935'; }
+          else if (dias !== null && dias <= 30) { vencTd.style.color = '#FF9800'; }
+        }
+      }
+      tr.appendChild(vencTd);
+      tbody.appendChild(tr);
     });
 
-    tableSection.appendChild(cardsDiv);
+    // Summary row
+    const summaryRow = document.createElement('tr'); summaryRow.className = 'summary-row';
+    summaryRow.appendChild(document.createElement('td'));
+    const sumLabel = document.createElement('td'); sumLabel.textContent = 'TOTALES'; sumLabel.style.fontWeight = '700'; sumLabel.style.padding = '4px 8px'; summaryRow.appendChild(sumLabel);
+    const grandTotal = data.reduce((s, r) => s + calcTotal(r), 0);
+    const grandTd = document.createElement('td'); grandTd.textContent = maskValue(formatCOP(grandTotal)); grandTd.style.fontWeight = '700'; grandTd.style.padding = '4px 8px'; grandTd.style.color = 'var(--color-primary)'; summaryRow.appendChild(grandTd);
+    for (let i = FIXED_NUMERIC_START; i < vencCol; i++) {
+      let colSum = 0; data.forEach(row => { colSum += Number(row[i]) || 0; });
+      const td = document.createElement('td'); td.textContent = maskValue(formatCOP(colSum)); td.style.fontWeight = '600'; td.style.padding = '4px 8px'; summaryRow.appendChild(td);
+    }
+    summaryRow.appendChild(document.createElement('td'));
+    tbody.appendChild(summaryRow);
+
+    table.appendChild(tbody);
+    wrapper.appendChild(table);
+    tableSection.appendChild(wrapper);
     updateTotal(grandTotal);
   }
 
