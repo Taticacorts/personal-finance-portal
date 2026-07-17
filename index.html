@@ -3699,7 +3699,7 @@ const NominaModule = (() => {
     var SUELDO_FIJO = 9992000;
     var SUELDO_REAL_BASE = (monthIndex === 2 || monthIndex === 3) ? 7377486 : 9992000;
     var totalCostos = 0;
-    monthData.forEach(function(row) { totalCostos += Number(row[1]) || 0; });
+    monthData.forEach(function(row) { totalCostos += Number(row[1]) || Number(row[2]) || 0; });
     var primaKey = 'nomina_prima_' + monthIndex;
     var prima = Number(localStorage.getItem(primaKey)) || 0;
     var sueldoReal = SUELDO_REAL_BASE + prima;
