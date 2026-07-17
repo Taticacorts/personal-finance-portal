@@ -4199,40 +4199,7 @@ const App = (() => {
 
 document.addEventListener('DOMContentLoaded', () => {
   App.init();
-  // Check vencimientos after app loads (user must visit Mis Ahorros at least once for data)
-  setTimeout(async function() {
-    try {
-      var cached = await CacheModule.getSheetData('Gatos');
-      if (cached && cached.values) {
-        console.log('Checking vencimientos from cache, rows:', cached.values.length);
-        var vencCol = 9;
-        try { vencCol = 9 + JSON.parse(localStorage.getItem('mis_ahorros_extra_cols') || '[]').length; } catch(e) {}
-        var today = new Date(); today.setHours(0,0,0,0);
-        var todayKey = today.toISOString().split('T')[0];
-        for (var row of cached.values) {
-          var rubro = (row[0] || '').toString().trim();
-          var fechaStr = (row[vencCol] || '').toString().trim();
-          if (!fechaStr) continue;
-          var d = null;
-          var dmyM = fechaStr.match(/^(\\d{1,2})\\/(\\d{1,2})\\/(\\d{4})$/);
-          if (dmyM) d = new Date(parseInt(dmyM[3]), parseInt(dmyM[2])-1, parseInt(dmyM[1]));
-          if (!d) continue;
-          d.setHours(0,0,0,0);
-          var dias = Math.round((d - today) / (1000*60*60*24));
-          if (dias !== 0 && dias !== 2 && dias !== 3) continue;
-          var emailKey = 'venc_sent_' + rubro.replace(/\\s/g, '_') + '_' + todayKey;
-          if (localStorage.getItem(emailKey)) continue;
-          console.log('Sending vencimiento email for:', rubro, dias, 'days');
-          var token = await AuthModule.getToken(['Mail.Send']);
-          var subject = dias === 0 ? 'Vencimiento HOY: ' + rubro : 'Vencimiento en ' + dias + ' dia(s): ' + rubro;
-          var body = 'Tienes un vencimiento:\\n\\nRubro: ' + rubro + '\\nFecha: ' + fechaStr + '\\n' + (dias === 0 ? 'Vence HOY.' : 'Faltan ' + dias + ' dia(s).');
-          await fetch('https://graph.microsoft.com/v1.0/me/sendMail', { method: 'POST', headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' }, body: JSON.stringify({ message: { subject: subject, body: { contentType: 'Text', content: body }, toRecipients: [{ emailAddress: { address: 'taticacorts@hotmail.com' } }] }, saveToSentItems: false }) });
-          localStorage.setItem(emailKey, '1');
-          console.log('Email sent for:', rubro);
-        }
-      }
-    } catch(err) { console.warn('Vencimiento check error:', err); }
-  }, 3000);
+
 
 });
     </script>
