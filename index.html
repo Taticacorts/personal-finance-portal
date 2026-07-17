@@ -3695,16 +3695,14 @@ const NominaModule = (() => {
 
     const monthName = MONTHS[monthIndex].name;
 
-    // Calculate badges
-    let sueldoReal = 0;
-    let totalCostos = 0;
-    monthData.forEach(row => {
-      const sr = Number(row[1]) || 0;
-      const cost = Number(row[2]) || 0;
-      if (sr > sueldoReal) sueldoReal = sr;
-      totalCostos += cost;
-    });
-    const disponible = sueldoReal - totalCostos;
+    // Calculate badges - sueldo fijo + prima para nov/dic
+    var SUELDO_FIJO = 9992000;
+    var totalCostos = 0;
+    monthData.forEach(function(row) { totalCostos += Number(row[1]) || Number(row[2]) || 0; });
+    var primaKey = 'nomina_prima_' + monthIndex;
+    var prima = Number(localStorage.getItem(primaKey)) || 0;
+    var sueldoReal = SUELDO_FIJO + prima;
+    var disponible = sueldoReal - totalCostos;
 
     // Month title
     const title = document.createElement('h2');
@@ -3720,6 +3718,18 @@ const NominaModule = (() => {
     const dispBadge = Components.createBadge('DISPONIBLE', maskValue(formatCOP(disponible)), '\u2705');
     dispBadge.id = 'badge-disponible';
     badgeContainer.appendChild(dispBadge);
+    if (monthIndex === 10 || monthIndex === 11) {
+      var primaBadge = document.createElement('div'); primaBadge.className = 'badge';
+      var primaLabel = document.createElement('div'); primaLabel.className = 'badge-content';
+      primaLabel.innerHTML = '<span class="badge-label">PRIMA</span>';
+      primaBadge.appendChild(primaLabel);
+      var primaInp = document.createElement('input'); primaInp.type = 'number'; primaInp.className = 'form-control';
+      primaInp.style.cssText = 'width:100px;padding:3px 6px;font-size:0.8rem;';
+      primaInp.value = prima || ''; primaInp.placeholder = '0';
+      primaInp.addEventListener('change', function() { localStorage.setItem(primaKey, this.value); renderMonthDetail(monthIndex); });
+      primaBadge.appendChild(primaInp);
+      badgeContainer.appendChild(primaBadge);
+    }
     detail.appendChild(badgeContainer);
 
     // Table
