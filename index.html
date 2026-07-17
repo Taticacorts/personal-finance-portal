@@ -2790,15 +2790,33 @@ const GastosApartamentoModule = (() => {
     if (!tableSection) return;
     tableSection.innerHTML = '';
 
-    const headers = MODULE_COLUMNS['gastos-apartamento'].headers;
-    const rows = data.map(row => [row[0] || '', maskValue(formatCOP(Number(row[1]) || 0)), row[2] || '']);
+    const container = document.createElement('div');
+    container.className = 'table-container';
+    const table = document.createElement('table');
+    table.className = 'data-table';
+    table.style.fontSize = '0.75rem';
 
-    const table = Components.createTable(headers, rows, {
-      onEdit: handleEdit,
-      onDelete: handleDelete
+    const thead = document.createElement('thead');
+    const headerRow = document.createElement('tr');
+    ['ITEMS', 'COSTOS', 'OBS.', ''].forEach(h => {
+      const th = document.createElement('th'); th.textContent = h; th.style.padding = '6px 8px'; th.style.fontSize = '0.65rem'; headerRow.appendChild(th);
+    });
+    thead.appendChild(headerRow); table.appendChild(thead);
+
+    const tbody = document.createElement('tbody');
+    data.forEach((row, rowIdx) => {
+      const tr = document.createElement('tr');
+      const tdItem = document.createElement('td'); tdItem.textContent = row[0] || ''; tdItem.style.padding = '4px 8px'; tdItem.style.fontWeight = '500'; tr.appendChild(tdItem);
+      const tdCosto = document.createElement('td'); tdCosto.textContent = maskValue(formatCOP(Number(row[1]) || 0)); tdCosto.style.padding = '4px 8px'; tdCosto.style.fontWeight = '600'; tdCosto.style.color = 'var(--color-primary)'; tr.appendChild(tdCosto);
+      const tdObs = document.createElement('td'); tdObs.textContent = row[2] || ''; tdObs.style.padding = '4px 8px'; tdObs.style.fontSize = '0.7rem'; tdObs.style.color = 'var(--color-text-light)'; tr.appendChild(tdObs);
+      const actionsCell = document.createElement('td'); actionsCell.className = 'actions-cell'; actionsCell.style.padding = '4px';
+      const editBtn = document.createElement('button'); editBtn.className = 'btn-icon btn-icon-edit'; editBtn.style.width = '24px'; editBtn.style.height = '24px'; editBtn.style.fontSize = '0.7rem'; editBtn.textContent = String.fromCodePoint(0x270F, 0xFE0F); editBtn.addEventListener('click', () => handleEdit(rowIdx)); actionsCell.appendChild(editBtn);
+      const delBtn = document.createElement('button'); delBtn.className = 'btn-icon btn-icon-danger'; delBtn.style.width = '24px'; delBtn.style.height = '24px'; delBtn.style.fontSize = '0.7rem'; delBtn.textContent = String.fromCodePoint(0x1F5D1, 0xFE0F); delBtn.addEventListener('click', () => handleDelete(rowIdx)); actionsCell.appendChild(delBtn);
+      tr.appendChild(actionsCell);
+      tbody.appendChild(tr);
     });
 
-    tableSection.appendChild(table);
+    table.appendChild(tbody); container.appendChild(table); tableSection.appendChild(container);
     updateTotal();
   }
 
