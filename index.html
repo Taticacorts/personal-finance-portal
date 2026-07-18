@@ -3703,7 +3703,7 @@ const NominaModule = (() => {
     var primaKey = 'nomina_prima_' + monthIndex;
     var prima = Number(localStorage.getItem(primaKey)) || 0;
     var sueldoReal = SUELDO_REAL_BASE + prima;
-    var disponible = Math.abs(sueldoReal - totalCostos);
+    var disponible = sueldoReal - totalCostos;
 
     // Month title
     const title = document.createElement('h2');
