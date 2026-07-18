@@ -1663,7 +1663,7 @@ const AuthModule = (() => {
 
     // Try popup login first
     try {
-      const popupResult = await msalInstance.loginPopup(loginRequest);
+      const popupResult = await msalInstance.loginRedirect(loginRequest); return null;
       currentAccount = popupResult.account;
       return popupResult;
     } catch (popupError) {
