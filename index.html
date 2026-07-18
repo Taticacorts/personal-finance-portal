@@ -4092,8 +4092,9 @@ const App = (() => {
     // Main content wrapper - offset by sidebar width
     const mainWrapper = document.createElement('div');
     mainWrapper.id = 'main-wrapper';
-    mainWrapper.style.marginLeft = '220px';
+    mainWrapper.style.marginLeft = window.innerWidth < 768 ? '0' : '220px';
     mainWrapper.style.minHeight = '100vh';
+    window.addEventListener('resize', function() { mainWrapper.style.marginLeft = window.innerWidth < 768 ? '0' : '220px'; });
     mainWrapper.style.backgroundColor = '#f5f5f5';
 
     // Header bar
