@@ -3798,6 +3798,13 @@ const NominaModule = (() => {
       tbody.appendChild(tr);
     });
 
+    // Total row
+    var totalRow = document.createElement('tr'); totalRow.style.fontWeight = 'bold'; totalRow.style.borderTop = '2px solid var(--color-accent)';
+    var tdTotalLabel = document.createElement('td'); tdTotalLabel.textContent = 'TOTAL'; tdTotalLabel.style.padding = '6px 8px'; totalRow.appendChild(tdTotalLabel);
+    var totalSum = 0; monthData.forEach(function(r) { totalSum += Number(r[1]) || Number(r[2]) || 0; });
+    var tdTotalVal = document.createElement('td'); tdTotalVal.textContent = maskValue(formatCOP(totalSum)); tdTotalVal.style.padding = '6px 8px'; tdTotalVal.style.color = 'var(--color-primary)'; totalRow.appendChild(tdTotalVal);
+    totalRow.appendChild(document.createElement('td'));
+    tbody.appendChild(totalRow);
     table.appendChild(tbody); container.appendChild(table); tableContainer.appendChild(container);
   }
 
