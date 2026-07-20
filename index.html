@@ -3732,6 +3732,20 @@ const NominaModule = (() => {
       badgeContainer.appendChild(primaBadge);
     }
     detail.appendChild(badgeContainer);
+    // Editable sueldo inputs
+    var sueldoEditDiv = document.createElement('div');
+    sueldoEditDiv.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;max-width:400px;';
+    sueldoEditDiv.innerHTML = '<div><label style="font-size:0.65rem;color:#666;">Sueldo Real</label><input class="form-control" style="padding:4px 8px;font-size:0.8rem;" type="number" id="inp-sueldo-real" value="' + SUELDO_REAL_BASE + '"></div><div><label style="font-size:0.65rem;color:#666;">Sueldo</label><input class="form-control" style="padding:4px 8px;font-size:0.8rem;" type="number" id="inp-sueldo" value="' + SUELDO_FIJO + '"></div>';
+    sueldoEditDiv.querySelectorAll('input').forEach(function(inp) {
+      inp.addEventListener('change', function() {
+        var sr = Number(document.getElementById('inp-sueldo-real').value) || 0;
+        var sf = Number(document.getElementById('inp-sueldo').value) || 0;
+        localStorage.setItem('sueldo_real_' + monthIndex, sr);
+        localStorage.setItem('sueldo_fijo_' + monthIndex, sf);
+        renderMonthDetail(monthIndex);
+      });
+    });
+    detail.appendChild(sueldoEditDiv);
 
     // Table
     const tableContainer = document.createElement('div');
